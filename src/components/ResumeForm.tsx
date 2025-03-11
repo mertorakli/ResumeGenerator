@@ -73,6 +73,7 @@ export default function ResumeForm() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(0)
   const [skills, setSkills] = useState<string[]>([''])
+  const [validationError, setValidationError] = useState<string | null>(null)
   
   const { register, handleSubmit, formState: { errors }, control, watch, reset, setValue } = useForm<ResumeData>({
     resolver: zodResolver(resumeSchema),
@@ -143,21 +144,59 @@ export default function ResumeForm() {
     setCurrentStep((prev) => Math.max(prev - 1, 0))
   }
 
+  const removeCustomSection = (index: number) => {
+    customSectionArray.remove(index)
+  }
+
   const onSubmit = (data: ResumeData) => {
-    if (currentStep < steps.length - 1) {
-      nextStep()
-      return
+    try {
+      // Clear any previous validation errors
+      setValidationError(null)
+
+      // Validate the form data
+      if (currentStep === steps.length - 1) {
+        // Check for empty sections
+        if (data.skills.length === 0 || data.skills.every(skill => !skill.trim())) {
+          setValidationError('Please add at least one skill')
+          return
+        }
+
+        if (data.experience.length === 0) {
+          setValidationError('Please add at least one experience entry')
+          return
+        }
+
+        if (data.education.length === 0) {
+          setValidationError('Please add at least one education entry')
+          return
+        }
+
+        // Remove empty custom sections before submitting
+        const nonEmptyCustomSections = data.customSections.filter(
+          section => section.title.trim() !== '' && section.description.trim() !== ''
+        )
+        data.customSections = nonEmptyCustomSections
+
+        // Proceed with form submission
+        const formData = {
+          ...data,
+          skills: skills.filter(skill => skill.trim() !== ''),
+        }
+        const queryParams = new URLSearchParams()
+        queryParams.set('data', JSON.stringify(formData))
+        const template = new URLSearchParams(window.location.search).get('template') || 'professional'
+        queryParams.set('template', template)
+        router.push(`/preview?${queryParams.toString()}`)
+      } else {
+        nextStep()
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setValidationError(error.message)
+      } else {
+        setValidationError('An unexpected error occurred')
+      }
     }
-    
-    const formData = {
-      ...data,
-      skills: skills.filter(skill => skill.trim() !== ''),
-    }
-    const queryParams = new URLSearchParams()
-    queryParams.set('data', JSON.stringify(formData))
-    const template = new URLSearchParams(window.location.search).get('template') || 'professional'
-    queryParams.set('template', template)
-    router.push(`/preview?${queryParams.toString()}`)
   }
 
   const addLink = () => {
@@ -566,27 +605,47 @@ export default function ResumeForm() {
               )}
 
               {currentStep === 5 && (
-                <div className="space-y-6">
-                  <h2 className="text-2xl font-bold text-white mb-4">Custom Sections</h2>
+                <div className="space-y-6 bg-white bg-opacity-90 p-6 rounded-lg">
+                  <h3 className="text-lg font-medium text-gray-900">Custom Sections</h3>
                   {customSectionArray.fields.map((field, index) => (
-                    <div key={field.id} className="mb-4">
-                      <input
-                        type="text"
-                        placeholder="Section Title"
-                        {...register(`customSections.${index}.title`)}
-                        className="block w-full rounded-md bg-white bg-opacity-90 border border-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-900 mb-2"
-                      />
-                      <textarea
-                        placeholder="Description"
-                        {...register(`customSections.${index}.description`)}
-                        className="block w-full rounded-md bg-white bg-opacity-90 border border-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-900"
-                      />
+                    <div key={field.id} className="space-y-4 p-4 border border-gray-200 rounded-md relative">
+                      <button
+                        type="button"
+                        onClick={() => removeCustomSection(index)}
+                        className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Section Title</label>
+                        <input
+                          type="text"
+                          {...register(`customSections.${index}.title`)}
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        />
+                        {errors.customSections?.[index]?.title && (
+                          <p className="mt-1 text-sm text-red-600">{errors.customSections[index]?.title?.message}</p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea
+                          {...register(`customSections.${index}.description`)}
+                          rows={4}
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        />
+                        {errors.customSections?.[index]?.description && (
+                          <p className="mt-1 text-sm text-red-600">{errors.customSections[index]?.description?.message}</p>
+                        )}
+                      </div>
                     </div>
                   ))}
                   <button
                     type="button"
                     onClick={addCustomSection}
-                    className="px-4 py-2 bg-white text-indigo-600 rounded-md hover:bg-opacity-90 transition-colors duration-200"
+                    className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-200"
                   >
                     Add Section
                   </button>
@@ -655,6 +714,12 @@ export default function ResumeForm() {
               )}
             </motion.div>
           </AnimatePresence>
+
+          {validationError && (
+            <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+              {validationError}
+            </div>
+          )}
 
           <div className="flex justify-between mt-8">
             <button
