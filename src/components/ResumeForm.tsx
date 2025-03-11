@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { testResumeData } from '@/utils/testData'
+import Accordion from './Accordion'
 
 const resumeSchema = z.object({
   personalInfo: z.object({
@@ -156,45 +157,46 @@ export default function ResumeForm() {
       // Validate the form data
       if (currentStep === steps.length - 1) {
         // Check for empty sections
-        if (data.skills.length === 0 || data.skills.every(skill => !skill.trim())) {
-          setValidationError('Please add at least one skill')
-          return
+        const validSkills = skills.filter(skill => skill.trim() !== '');
+        if (validSkills.length === 0) {
+          setValidationError('Please add at least one skill');
+          return;
         }
 
         if (data.experience.length === 0) {
-          setValidationError('Please add at least one experience entry')
-          return
+          setValidationError('Please add at least one experience entry');
+          return;
         }
 
         if (data.education.length === 0) {
-          setValidationError('Please add at least one education entry')
-          return
+          setValidationError('Please add at least one education entry');
+          return;
         }
 
         // Remove empty custom sections before submitting
         const nonEmptyCustomSections = data.customSections.filter(
           section => section.title.trim() !== '' && section.description.trim() !== ''
-        )
-        data.customSections = nonEmptyCustomSections
+        );
+        data.customSections = nonEmptyCustomSections;
 
         // Proceed with form submission
         const formData = {
           ...data,
-          skills: skills.filter(skill => skill.trim() !== ''),
-        }
-        const queryParams = new URLSearchParams()
-        queryParams.set('data', JSON.stringify(formData))
-        const template = new URLSearchParams(window.location.search).get('template') || 'professional'
-        queryParams.set('template', template)
-        router.push(`/preview?${queryParams.toString()}`)
+          skills: validSkills, // Use the filtered valid skills
+        };
+        const queryParams = new URLSearchParams();
+        queryParams.set('data', JSON.stringify(formData));
+        const template = new URLSearchParams(window.location.search).get('template') || 'professional';
+        queryParams.set('template', template);
+        router.push(`/preview?${queryParams.toString()}`);
       } else {
-        nextStep()
+        nextStep();
       }
     } catch (error) {
       if (error instanceof Error) {
-        setValidationError(error.message)
+        setValidationError(error.message);
       } else {
-        setValidationError('An unexpected error occurred')
+        setValidationError('An unexpected error occurred');
       }
     }
   }
@@ -252,19 +254,43 @@ export default function ResumeForm() {
           </button>
         </div>
         <div className="mb-8">
-          <div className="flex justify-between items-center w-full relative">
-            {steps.map((step, index) => (
-              <div key={step.id} className="flex flex-col items-center cursor-pointer" onClick={() => setCurrentStep(index)}>
+          <div className="relative px-4 py-5 bg-indigo-700 bg-opacity-30 rounded-lg">
+            {/* Progress bar */}
+            <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-300 -translate-y-1/2 mx-8 rounded-full">
+              <div 
+                className="h-full bg-indigo-500 rounded-full transition-all duration-300"
+                style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
+              ></div>
+            </div>
+            
+            {/* Step indicators */}
+            <div className="flex justify-between items-center w-full relative">
+              {steps.map((step, index) => (
                 <div 
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    index <= currentStep ? 'bg-indigo-600 text-white' : 'bg-gray-300'
-                  }`}
+                  key={step.id} 
+                  className="flex flex-col items-center cursor-pointer z-10" 
+                  onClick={() => setCurrentStep(index)}
                 >
-                  {index + 1}
+                  <div 
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
+                      index < currentStep 
+                        ? 'bg-indigo-600 text-white' 
+                        : index === currentStep 
+                          ? 'bg-indigo-500 text-white ring-4 ring-indigo-300' 
+                          : 'bg-white text-gray-500'
+                    }`}
+                  >
+                    {index + 1}
+                  </div>
+                  <span className="text-xs mt-2 text-white text-center hidden sm:block">{step.title}</span>
                 </div>
-                <span className="text-xs mt-2 text-white">{step.title}</span>
-              </div>
-            ))}
+              ))}
+            </div>
+            
+            {/* Current step label for mobile */}
+            <div className="text-center mt-4 text-white font-medium sm:hidden">
+              Step {currentStep + 1}: {steps[currentStep].title}
+            </div>
           </div>
         </div>
 
@@ -579,20 +605,33 @@ export default function ResumeForm() {
                 <div className="space-y-6">
                   <h2 className="text-2xl font-bold text-white mb-4">Language Skills</h2>
                   {languageArray.fields.map((field, index) => (
-                    <div key={field.id} className="flex space-x-4 mb-4">
-                      <input
-                        type="text"
-                        placeholder="Language"
-                        {...register(`languages.${index}.language`)}
-                        className="block w-full rounded-md bg-white bg-opacity-90 border border-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-900"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Proficiency"
-                        {...register(`languages.${index}.proficiency`)}
-                        className="block w-full rounded-md bg-white bg-opacity-90 border border-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-900"
-                      />
-                    </div>
+                    <Accordion key={field.id} title={field.language || 'Language'}>
+                      <div className="flex space-x-4 mb-4">
+                        <input
+                          type="text"
+                          placeholder="Language"
+                          {...register(`languages.${index}.language`)}
+                          className="block w-full rounded-md bg-white bg-opacity-90 border border-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-900"
+                        />
+                        <select
+                          {...register(`languages.${index}.proficiency`)}
+                          className="block w-full rounded-md bg-white bg-opacity-90 border border-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-900"
+                        >
+                          <option value="">Select Proficiency</option>
+                          <option value="Native">Native</option>
+                          <option value="Fluent">Fluent</option>
+                          <option value="Conversational">Conversational</option>
+                          <option value="Basic">Basic</option>
+                        </select>
+                        <button
+                          type="button"
+                          onClick={() => languageArray.remove(index)}
+                          className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </Accordion>
                   ))}
                   <button
                     type="button"
