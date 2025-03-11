@@ -182,6 +182,14 @@ type StyleDefinitions = {
   achievementContainer?: {
     marginTop?: number;
   };
+  customSection?: {
+    marginBottom: number;
+  };
+  sectionDescription?: {
+    fontSize: number;
+    marginLeft: number;
+    color?: string;
+  };
 }
 
 const professionalStyles: StyleDefinitions = StyleSheet.create({
@@ -210,6 +218,7 @@ const professionalStyles: StyleDefinitions = StyleSheet.create({
   },
   contactItem: {
     marginHorizontal: 5,
+    fontSize: 11,
   },
   sectionTitle: {
     fontSize: 14,
@@ -258,14 +267,15 @@ const professionalStyles: StyleDefinitions = StyleSheet.create({
     gap: 5,
   },
   skillsSection: {
-    marginTop: 2,
-  },
-  skillCategory: {
-    fontSize: 12,
-    fontFamily: 'Times-Bold',
+    marginTop: 5,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 5,
   },
   skillList: {
-    fontSize: 12,
+    fontSize: 11,
+    width: '48%',
+    marginBottom: 5,
   },
   degree: {
     fontSize: 12,
@@ -294,11 +304,11 @@ const professionalStyles: StyleDefinitions = StyleSheet.create({
     fontSize: 12,
   },
   languageSection: {
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: 5,
   },
   languageItem: {
-    fontSize: 12,
+    fontSize: 11,
     marginBottom: 2,
   },
   languageLevel: {
@@ -306,7 +316,14 @@ const professionalStyles: StyleDefinitions = StyleSheet.create({
     fontStyle: 'italic',
     color: '#666',
   },
-})
+  customSection: {
+    marginBottom: 10,
+  },
+  sectionDescription: {
+    fontSize: 12,
+    marginLeft: 10,
+  },
+}) as StyleDefinitions;
 
 const creativeStyles: StyleDefinitions = StyleSheet.create({
   page: {
@@ -733,11 +750,10 @@ export const ResumeDocument = ({ data, template = 'professional' }: { data: any,
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Custom Sections</Text>
-          {data.customSections.map((section: any, index: number) => (
-            <View key={index} style={styles.experienceItem}>
+          {data.customSections.map((section: { title: string; description: string }, index: number) => (
+            <View key={index} style={styles.customSection}>
               <Text style={styles.sectionTitle}>{section.title}</Text>
-              <Text style={styles.jobDescription}>{section.description}</Text>
+              <Text style={styles.sectionDescription}>{section.description}</Text>
             </View>
           ))}
         </View>
