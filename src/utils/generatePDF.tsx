@@ -1,7 +1,190 @@
 import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/renderer'
 import { z } from 'zod'
 
-const professionalStyles = StyleSheet.create({
+type StyleDefinitions = {
+  page: {
+    flexDirection: 'row' | 'column';
+    backgroundColor: string;
+    padding: string | number;
+    fontFamily: string;
+  };
+  section: {
+    marginBottom: number;
+  };
+  header: {
+    fontSize: number;
+    marginBottom: number;
+    fontFamily?: string;
+    textAlign?: 'left' | 'right' | 'center' | 'justify';
+    color?: string;
+  };
+  contactInfo?: {
+    flexDirection?: 'row' | 'column';
+    justifyContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around';
+    marginBottom?: number;
+    fontSize?: number;
+    flexWrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
+    gap?: number;
+  };
+  contactItem?: {
+    marginHorizontal?: number;
+    fontSize?: number;
+    marginBottom?: number;
+    color?: string;
+    flexDirection?: 'row' | 'column';
+    alignItems?: 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
+    gap?: number;
+  };
+  sectionTitle: {
+    fontSize: number;
+    marginBottom: number;
+    fontFamily?: string;
+    borderBottomWidth?: number;
+    borderBottomColor?: string;
+    borderBottomStyle?: 'solid' | 'dashed' | 'dotted';
+    paddingBottom?: number;
+    color?: string;
+    textTransform?: 'none' | 'capitalize' | 'uppercase' | 'lowercase';
+  };
+  experienceItem: {
+    marginBottom: number;
+  };
+  jobTitle: {
+    fontSize: number;
+    fontFamily?: string;
+    color?: string;
+    marginBottom?: number;
+  };
+  jobDetails: {
+    fontSize: number;
+    marginBottom: number;
+    flexDirection?: 'row' | 'column';
+    justifyContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around';
+    color?: string;
+  };
+  jobLocation?: {
+    fontSize: number;
+    fontFamily?: string;
+    color?: string;
+  };
+  jobDescription: {
+    fontSize: number;
+    lineHeight: number;
+    marginLeft?: number;
+    color?: string;
+  };
+  bulletPoint: {
+    width: number;
+    fontSize: number;
+    marginRight: number;
+    color?: string;
+  };
+  bulletContainer: {
+    flexDirection: 'row' | 'column';
+    alignItems: 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
+    marginBottom: number;
+  };
+  skillsContainer: {
+    flexDirection: 'row' | 'column';
+    flexWrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
+    gap?: number;
+  };
+  skillsSection?: {
+    marginTop?: number;
+  };
+  skillCategory?: {
+    fontSize: number;
+    fontFamily?: string;
+    color?: string;
+    marginBottom?: number;
+  };
+  skillList: {
+    fontSize: number;
+    color?: string;
+    backgroundColor?: string;
+    padding?: string;
+    marginBottom?: number;
+    borderRadius?: number;
+  };
+  degree?: {
+    fontSize: number;
+    fontFamily?: string;
+    color?: string;
+  };
+  school?: {
+    fontSize: number;
+    flexDirection?: 'row' | 'column';
+    justifyContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around';
+  };
+  coursework?: {
+    fontSize: number;
+    marginTop?: number;
+  };
+  courseworkTitle?: {
+    fontSize: number;
+    fontFamily?: string;
+    marginBottom?: number;
+  };
+  courseworkList?: {
+    flexDirection: 'row' | 'column';
+    flexWrap: 'nowrap' | 'wrap' | 'wrap-reverse';
+    gap: number;
+  };
+  courseworkItem?: {
+    fontSize: number;
+  };
+  languageSection?: {
+    marginTop?: number;
+    marginBottom?: number;
+  };
+  languageItem?: {
+    fontSize: number;
+    marginBottom?: number;
+    color?: string;
+  };
+  languageLevel?: {
+    fontSize: number;
+    fontStyle?: 'normal' | 'italic' | 'oblique';
+    color?: string;
+  };
+  leftColumn?: {
+    width: string;
+    backgroundColor: string;
+    padding: number;
+    color: string;
+  };
+  rightColumn?: {
+    width: string;
+    padding: number;
+  };
+  subHeader?: {
+    fontSize: number;
+    color?: string;
+    marginBottom?: number;
+  };
+  rightSectionTitle?: {
+    fontSize: number;
+    marginBottom?: number;
+    color?: string;
+    fontFamily?: string;
+    textTransform?: 'none' | 'capitalize' | 'uppercase' | 'lowercase';
+  };
+  jobSubTitle?: {
+    fontSize: number;
+    color?: string;
+    marginBottom?: number;
+  };
+  dateRange?: {
+    fontSize: number;
+    color?: string;
+    marginBottom?: number;
+  };
+  achievementContainer?: {
+    marginTop?: number;
+  };
+}
+
+const professionalStyles: StyleDefinitions = StyleSheet.create({
   page: {
     flexDirection: 'column',
     backgroundColor: '#fff',
@@ -125,7 +308,7 @@ const professionalStyles = StyleSheet.create({
   },
 })
 
-const creativeStyles = StyleSheet.create({
+const creativeStyles: StyleDefinitions = StyleSheet.create({
   page: {
     flexDirection: 'row',
     backgroundColor: '#fff',
@@ -264,7 +447,7 @@ const creativeStyles = StyleSheet.create({
   },
 })
 
-const minimalStyles = StyleSheet.create({
+const minimalStyles: StyleDefinitions = StyleSheet.create({
   page: {
     flexDirection: 'column',
     backgroundColor: '#fff',
