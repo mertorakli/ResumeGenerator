@@ -57,7 +57,7 @@ const Accordion = ({
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="p-3 border-t border-gray-100 bg-white">
+            <div className="p-3 border-t border-gray-100 bg-white overflow-visible">
               {children}
             </div>
           </motion.div>

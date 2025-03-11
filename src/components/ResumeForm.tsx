@@ -603,15 +603,16 @@ export default function ResumeForm() {
               )}
 
               {currentStep === 4 && (
-                <div className="space-y-6">
+                <div className="space-y-6 overflow-visible">
                   <h2 className="text-2xl font-bold text-white mb-4">Language Skills</h2>
                   {languageArray.fields.map((field, index) => (
                     <Accordion 
                       key={field.id} 
                       title={field.language || 'Language'} 
                       defaultOpen={index === 0}
+                      className="overflow-visible"
                     >
-                      <div className="flex flex-col space-y-4 mb-4">
+                      <div className="flex flex-col space-y-4 mb-4 overflow-visible">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
                           <input
