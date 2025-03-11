@@ -242,6 +242,14 @@ export default function ResumeForm() {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 flex flex-col justify-center items-center">
+      {/* Progress bar at the top of the page */}
+      <div className="fixed top-0 left-0 w-full h-1 bg-gray-300 z-50">
+        <div 
+          className="h-full bg-indigo-500 transition-all duration-500"
+          style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
+        ></div>
+      </div>
+      
       <div className="w-full max-w-3xl px-4">
         <div className="text-center text-white py-8">
           <h1 className="text-4xl font-extrabold mb-4">Create Your Resume</h1>
@@ -256,13 +264,7 @@ export default function ResumeForm() {
         </div>
         <div className="mb-8">
           <div className="relative px-4 py-5 bg-indigo-700 bg-opacity-30 rounded-lg">
-            {/* Progress bar */}
-            <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-300 -translate-y-1/2 mx-8 rounded-full">
-              <div 
-                className="h-full bg-indigo-500 rounded-full transition-all duration-300"
-                style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
-              ></div>
-            </div>
+            {/* Remove the progress bar from here since we moved it to the top */}
             
             {/* Step indicators */}
             <div className="flex justify-between items-center w-full relative">
@@ -605,61 +607,99 @@ export default function ResumeForm() {
               {currentStep === 4 && (
                 <div className="space-y-6 overflow-visible">
                   <h2 className="text-2xl font-bold text-white mb-4">Language Skills</h2>
-                  {languageArray.fields.map((field, index) => (
-                    <Accordion 
-                      key={field.id} 
-                      title={field.language || 'Language'} 
-                      defaultOpen={index === 0}
-                      className="overflow-visible"
-                    >
-                      <div className="flex flex-col space-y-4 mb-4 overflow-visible">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
-                          <input
-                            type="text"
-                            placeholder="Language"
-                            {...register(`languages.${index}.language`)}
-                            className="block w-full rounded-md bg-white bg-opacity-90 border border-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-900 p-2.5"
-                          />
+                  
+                  <div className="bg-white bg-opacity-95 rounded-xl shadow-lg overflow-hidden">
+                    {languageArray.fields.map((field, index) => (
+                      <div 
+                        key={field.id}
+                        className={`border-b border-gray-100 ${index === languageArray.fields.length - 1 ? 'border-b-0' : ''}`}
+                      >
+                        <div 
+                          className="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors duration-200"
+                          onClick={() => {
+                            // Toggle accordion logic here if needed
+                          }}
+                        >
+                          <div className="flex items-center">
+                            <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mr-3">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                              </svg>
+                            </div>
+                            <h3 className="font-medium text-gray-800">{field.language || 'Language'}</h3>
+                          </div>
+                          <div className="flex items-center">
+                            {watch(`languages.${index}.proficiency`) && (
+                              <span className="px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800 mr-3">
+                                {watch(`languages.${index}.proficiency`)}
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                languageArray.remove(index);
+                              }}
+                              className="text-red-500 hover:text-red-700 transition-colors duration-200"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 6h18"></path>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                              </svg>
+                            </button>
+                          </div>
                         </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Proficiency</label>
-                          <Dropdown
-                            options={[
-                              { id: 'Native', label: 'Native' },
-                              { id: 'Fluent', label: 'Fluent' },
-                              { id: 'Conversational', label: 'Conversational' },
-                              { id: 'Basic', label: 'Basic' },
-                            ]}
-                            placeholder="Select proficiency level"
-                            value={watch(`languages.${index}.proficiency`) ? 
-                              { id: watch(`languages.${index}.proficiency`), label: watch(`languages.${index}.proficiency`) } : 
-                              null
-                            }
-                            onChange={(option) => {
-                              setValue(`languages.${index}.proficiency`, option.label);
-                            }}
-                          />
-                        </div>
-                        <div className="flex justify-end">
-                          <button
-                            type="button"
-                            onClick={() => languageArray.remove(index)}
-                            className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
-                          >
-                            Remove
-                          </button>
+                        
+                        <div className="p-4 bg-gray-50 border-t border-gray-100">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                              <input
+                                type="text"
+                                placeholder="Language"
+                                {...register(`languages.${index}.language`)}
+                                className="block w-full rounded-md bg-white border border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-900 p-2.5"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Proficiency</label>
+                              <Dropdown
+                                options={[
+                                  { id: 'Native', label: 'Native' },
+                                  { id: 'Fluent', label: 'Fluent' },
+                                  { id: 'Conversational', label: 'Conversational' },
+                                  { id: 'Basic', label: 'Basic' },
+                                ]}
+                                placeholder="Select proficiency level"
+                                value={watch(`languages.${index}.proficiency`) ? 
+                                  { id: watch(`languages.${index}.proficiency`), label: watch(`languages.${index}.proficiency`) } : 
+                                  null
+                                }
+                                onChange={(option) => {
+                                  setValue(`languages.${index}.proficiency`, option.label);
+                                }}
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </Accordion>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={addLanguage}
-                    className="px-4 py-2 bg-white text-indigo-600 rounded-md hover:bg-opacity-90 transition-colors duration-200"
-                  >
-                    Add Language
-                  </button>
+                    ))}
+                    
+                    <div className="p-4 bg-gray-50">
+                      <button
+                        type="button"
+                        onClick={addLanguage}
+                        className="w-full flex items-center justify-center px-4 py-2 bg-indigo-50 text-indigo-600 rounded-md hover:bg-indigo-100 transition-colors duration-200"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                          <line x1="12" y1="5" x2="12" y2="19"></line>
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add Language
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -712,73 +752,224 @@ export default function ResumeForm() {
               )}
 
               {currentStep === 6 && (
-                <div className="space-y-6">
-                  <h2 className="text-2xl font-bold text-white mb-4">Review Your Resume</h2>
-                  <div className="bg-white bg-opacity-90 p-6 rounded-lg space-y-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800">Personal Information</h3>
-                      <p className="text-sm text-gray-700">Name: {watch('personalInfo.fullName')}</p>
-                      <p className="text-sm text-gray-700">Email: {watch('personalInfo.email')}</p>
-                      <p className="text-sm text-gray-700">Phone: {watch('personalInfo.phone')}</p>
-                      <p className="text-sm text-gray-700">Location: {watch('personalInfo.location')}</p>
-                      <p className="text-sm text-gray-700">Summary: {watch('personalInfo.summary')}</p>
+                <div className="space-y-8">
+                  <div className="bg-white bg-opacity-95 rounded-xl shadow-lg overflow-hidden">
+                    <div className="px-6 py-5 border-b border-gray-100">
+                      <h2 className="text-2xl font-medium text-gray-800">Review Your Resume</h2>
+                      <p className="text-sm text-gray-500 mt-1">Verify your information before generating your resume</p>
                     </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800">Experience</h3>
-                      {watch('experience').map((exp, index) => (
-                        <div key={index} className="text-sm text-gray-700">
-                          <p>Title: {exp.title}</p>
-                          <p>Company: {exp.company}</p>
-                          <p>Location: {exp.location}</p>
-                          <p>Dates: {exp.startDate} - {exp.endDate || 'Present'}</p>
-                          <p>Description: {exp.description}</p>
+                    
+                    <div className="p-6">
+                      {/* Personal Information */}
+                      <div className="mb-8">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-medium text-gray-800">Personal Information</h3>
+                          <button 
+                            type="button" 
+                            onClick={() => setCurrentStep(0)}
+                            className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Edit
+                          </button>
                         </div>
-                      ))}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800">Education</h3>
-                      {watch('education').map((edu, index) => (
-                        <div key={index} className="text-sm text-gray-700">
-                          <p>Degree: {edu.degree}</p>
-                          <p>School: {edu.school}</p>
-                          <p>Location: {edu.location}</p>
-                          <p>Graduation Date: {edu.graduationDate}</p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="bg-gray-50 p-4 rounded-lg">
+                            <p className="text-sm text-gray-500 mb-1">Full Name</p>
+                            <p className="text-gray-800 font-medium">{watch('personalInfo.fullName')}</p>
+                          </div>
+                          <div className="bg-gray-50 p-4 rounded-lg">
+                            <p className="text-sm text-gray-500 mb-1">Email</p>
+                            <p className="text-gray-800 font-medium">{watch('personalInfo.email')}</p>
+                          </div>
+                          <div className="bg-gray-50 p-4 rounded-lg">
+                            <p className="text-sm text-gray-500 mb-1">Phone</p>
+                            <p className="text-gray-800 font-medium">{watch('personalInfo.phone')}</p>
+                          </div>
+                          <div className="bg-gray-50 p-4 rounded-lg">
+                            <p className="text-sm text-gray-500 mb-1">Location</p>
+                            <p className="text-gray-800 font-medium">{watch('personalInfo.location')}</p>
+                          </div>
                         </div>
-                      ))}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800">Skills</h3>
-                      <p className="text-sm text-gray-700">{skills.join(', ')}</p>
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800">Language Skills</h3>
-                      {watch('languages').map((lang, index) => (
-                        <div key={index} className="text-sm text-gray-700">
-                          <p>Language: {lang.language}</p>
-                          <p>Proficiency: {lang.proficiency}</p>
+                        <div className="mt-4 bg-gray-50 p-4 rounded-lg">
+                          <p className="text-sm text-gray-500 mb-1">Professional Summary</p>
+                          <p className="text-gray-800">{watch('personalInfo.summary')}</p>
                         </div>
-                      ))}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800">Custom Sections</h3>
-                      {watch('customSections').map((section, index) => (
-                        <div key={index} className="text-sm text-gray-700">
-                          <p>Title: {section.title}</p>
-                          <p>Description: {section.description}</p>
+                      </div>
+                      
+                      {/* Experience */}
+                      <div className="mb-8">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-medium text-gray-800">Experience</h3>
+                          <button 
+                            type="button" 
+                            onClick={() => setCurrentStep(1)}
+                            className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Edit
+                          </button>
                         </div>
-                      ))}
+                        <div className="space-y-4">
+                          {watch('experience').map((exp, index) => (
+                            <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <h4 className="font-medium text-gray-800">{exp.title}</h4>
+                                  <p className="text-gray-600">{exp.company}</p>
+                                </div>
+                                <div className="text-right">
+                                  <p className="text-gray-600">{exp.location}</p>
+                                  <p className="text-sm text-gray-500">{exp.startDate} - {exp.endDate || 'Present'}</p>
+                                </div>
+                              </div>
+                              <p className="mt-2 text-gray-700 whitespace-pre-line">{exp.description}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Education */}
+                      <div className="mb-8">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-medium text-gray-800">Education</h3>
+                          <button 
+                            type="button" 
+                            onClick={() => setCurrentStep(2)}
+                            className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Edit
+                          </button>
+                        </div>
+                        <div className="space-y-4">
+                          {watch('education').map((edu, index) => (
+                            <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <h4 className="font-medium text-gray-800">{edu.degree}</h4>
+                                  <p className="text-gray-600">{edu.school}</p>
+                                </div>
+                                <div className="text-right">
+                                  <p className="text-gray-600">{edu.location}</p>
+                                  <p className="text-sm text-gray-500">{edu.graduationDate}</p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Skills */}
+                      <div className="mb-8">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-medium text-gray-800">Skills</h3>
+                          <button 
+                            type="button" 
+                            onClick={() => setCurrentStep(3)}
+                            className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Edit
+                          </button>
+                        </div>
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <div className="flex flex-wrap gap-2">
+                            {skills.filter(skill => skill.trim() !== '').map((skill, index) => (
+                              <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Languages */}
+                      <div className="mb-8">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-medium text-gray-800">Languages</h3>
+                          <button 
+                            type="button" 
+                            onClick={() => setCurrentStep(4)}
+                            className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Edit
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {watch('languages').map((lang, index) => (
+                            <div key={index} className="bg-gray-50 p-4 rounded-lg flex justify-between items-center">
+                              <span className="font-medium text-gray-800">{lang.language}</span>
+                              <span className="text-sm px-3 py-1 rounded-full bg-indigo-100 text-indigo-800">
+                                {lang.proficiency}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Custom Sections */}
+                      {watch('customSections').length > 0 && (
+                        <div className="mb-8">
+                          <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-medium text-gray-800">Custom Sections</h3>
+                            <button 
+                              type="button" 
+                              onClick={() => setCurrentStep(5)}
+                              className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                              </svg>
+                              Edit
+                            </button>
+                          </div>
+                          <div className="space-y-4">
+                            {watch('customSections').filter(section => section.title.trim() !== '' && section.description.trim() !== '').map((section, index) => (
+                              <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                                <h4 className="font-medium text-gray-800 mb-2">{section.title}</h4>
+                                <p className="text-gray-700 whitespace-pre-line">{section.description}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
+                  
+                  {validationError && (
+                    <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                      <div className="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <line x1="12" y1="8" x2="12" y2="12"></line>
+                          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        {validationError}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </motion.div>
           </AnimatePresence>
-
-          {validationError && (
-            <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
-              {validationError}
-            </div>
-          )}
 
           <div className="flex justify-between mt-8">
             <button
