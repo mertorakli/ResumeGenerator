@@ -576,6 +576,49 @@ const minimalStyles: StyleDefinitions = StyleSheet.create({
   },
 })
 
+const mobileStyles = StyleSheet.create({
+  container: {
+    padding: 10,
+    fontSize: 14,
+  },
+  button: {
+    width: '100%', // Full width buttons
+  },
+  formContainer: {
+    display: 'flex',
+    flexDirection: 'column', // Stack elements vertically
+    alignItems: 'center', // Center elements
+  },
+});
+
+const navStyles = StyleSheet.create({
+  navbar: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  navItem: {
+    fontSize: 16,
+    padding: 10,
+    color: '#000',
+    textAlign: 'left',
+    width: '100%',
+  },
+});
+
+const NavigationBar = () => (
+  <View style={{ flexDirection: 'column', padding: 10 }}>
+    <View style={navStyles.navbar}>
+      <Text style={navStyles.navItem}>1. Personal Information</Text>
+      <Text style={navStyles.navItem}>2. Experience</Text>
+      <Text style={navStyles.navItem}>3. Education</Text>
+      <Text style={navStyles.navItem}>4. Skills</Text>
+      <Text style={navStyles.navItem}>5. Languages</Text>
+      <Text style={navStyles.navItem}>6. Custom Sections</Text>
+      <Text style={navStyles.navItem}>7. Review</Text>
+    </View>
+  </View>
+);
+
 export const ResumeDocument = ({ data, template = 'professional' }: { data: any, template?: string }) => {
   const getStyles = () => {
     switch (template) {
