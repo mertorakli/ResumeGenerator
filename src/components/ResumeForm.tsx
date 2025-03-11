@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { testResumeData } from '@/utils/testData'
 import Accordion from './Accordion'
+import Dropdown from './Dropdown'
 
 const resumeSchema = z.object({
   personalInfo: z.object({
@@ -605,31 +606,49 @@ export default function ResumeForm() {
                 <div className="space-y-6">
                   <h2 className="text-2xl font-bold text-white mb-4">Language Skills</h2>
                   {languageArray.fields.map((field, index) => (
-                    <Accordion key={field.id} title={field.language || 'Language'}>
-                      <div className="flex space-x-4 mb-4">
-                        <input
-                          type="text"
-                          placeholder="Language"
-                          {...register(`languages.${index}.language`)}
-                          className="block w-full rounded-md bg-white bg-opacity-90 border border-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-900"
-                        />
-                        <select
-                          {...register(`languages.${index}.proficiency`)}
-                          className="block w-full rounded-md bg-white bg-opacity-90 border border-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-900"
-                        >
-                          <option value="">Select Proficiency</option>
-                          <option value="Native">Native</option>
-                          <option value="Fluent">Fluent</option>
-                          <option value="Conversational">Conversational</option>
-                          <option value="Basic">Basic</option>
-                        </select>
-                        <button
-                          type="button"
-                          onClick={() => languageArray.remove(index)}
-                          className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
-                        >
-                          Remove
-                        </button>
+                    <Accordion 
+                      key={field.id} 
+                      title={field.language || 'Language'} 
+                      defaultOpen={index === 0}
+                    >
+                      <div className="flex flex-col space-y-4 mb-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                          <input
+                            type="text"
+                            placeholder="Language"
+                            {...register(`languages.${index}.language`)}
+                            className="block w-full rounded-md bg-white bg-opacity-90 border border-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-900 p-2.5"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Proficiency</label>
+                          <Dropdown
+                            options={[
+                              { id: 'Native', label: 'Native' },
+                              { id: 'Fluent', label: 'Fluent' },
+                              { id: 'Conversational', label: 'Conversational' },
+                              { id: 'Basic', label: 'Basic' },
+                            ]}
+                            placeholder="Select proficiency level"
+                            value={watch(`languages.${index}.proficiency`) ? 
+                              { id: watch(`languages.${index}.proficiency`), label: watch(`languages.${index}.proficiency`) } : 
+                              null
+                            }
+                            onChange={(option) => {
+                              setValue(`languages.${index}.proficiency`, option.label);
+                            }}
+                          />
+                        </div>
+                        <div className="flex justify-end">
+                          <button
+                            type="button"
+                            onClick={() => languageArray.remove(index)}
+                            className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
+                          >
+                            Remove
+                          </button>
+                        </div>
                       </div>
                     </Accordion>
                   ))}
