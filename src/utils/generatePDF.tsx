@@ -1,5 +1,9 @@
-import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/renderer'
+import { Document, Page, Text, View, StyleSheet, PDFViewer, } from '@react-pdf/renderer'
 import { z } from 'zod'
+import { useState } from 'react';
+
+
+
 
 type StyleDefinitions = {
   page: {
@@ -576,48 +580,133 @@ const minimalStyles: StyleDefinitions = StyleSheet.create({
   },
 })
 
-const mobileStyles = StyleSheet.create({
-  container: {
-    padding: 10,
-    fontSize: 14,
+const mobileStyles = {
+  stepContainer: {
+    padding: '20px 10px',
+    backgroundColor: '#f8f9fa',
+    borderRadius: '8px',
+    margin: '10px',
   },
-  button: {
-    width: '100%', // Full width buttons
-  },
-  formContainer: {
+  stepsWrapper: {
     display: 'flex',
-    flexDirection: 'column', // Stack elements vertically
-    alignItems: 'center', // Center elements
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'relative' as const,
+    marginBottom: '25px',
   },
-});
-
-const navStyles = StyleSheet.create({
-  navbar: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  navItem: {
-    fontSize: 16,
-    padding: 10,
-    color: '#000',
-    textAlign: 'left',
+  progressLine: {
+    position: 'absolute' as const,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    height: '2px',
+    background: '#e9ecef',
     width: '100%',
+    zIndex: 0,
   },
-});
+  progressLineFilled: {
+    position: 'absolute' as const,
+    top: '0',
+    height: '100%',
+    background: '#7c3aed',
+    transition: 'width 0.3s ease',
+  },
+  stepCircle: {
+    width: '30px',
+    height: '30px',
+    borderRadius: '50%',
+    backgroundColor: '#fff',
+    border: '2px solid #e9ecef',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    color: '#6b7280',
+    position: 'relative' as const,
+    zIndex: 1,
+    transition: 'all 0.3s ease',
+  },
+  stepCircleActive: {
+    backgroundColor: '#7c3aed',
+    borderColor: '#7c3aed',
+    color: '#fff',
+  },
+  stepCircleCompleted: {
+    backgroundColor: '#7c3aed',
+    borderColor: '#7c3aed',
+    color: '#fff',
+  },
+  stepLabel: {
+    position: 'absolute' as const,
+    top: '35px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    fontSize: '12px',
+    color: '#6b7280',
+    whiteSpace: 'nowrap' as const,
+    textAlign: 'center' as const,
+  },
+  currentStepText: {
+    textAlign: 'center' as const,
+    color: '#374151',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    marginTop: '10px',
+  }
+} as const;
 
-const NavigationBar = () => (
-  <View style={{ flexDirection: 'column', padding: 10 }}>
-    <View style={navStyles.navbar}>
-      <Text style={navStyles.navItem}>1. Personal Information</Text>
-      <Text style={navStyles.navItem}>2. Experience</Text>
-      <Text style={navStyles.navItem}>3. Education</Text>
-      <Text style={navStyles.navItem}>4. Skills</Text>
-      <Text style={navStyles.navItem}>5. Languages</Text>
-      <Text style={navStyles.navItem}>6. Custom Sections</Text>
-      <Text style={navStyles.navItem}>7. Review</Text>
-    </View>
-  </View>
-);
+const NavigationBar = () => {
+  const [activeSection, setActiveSection] = useState(0);
+  const steps = [
+    "Personal Info",
+    "Experience",
+    "Education",
+    "Skills",
+    "Languages",
+    "Custom",
+    "Review"
+  ];
+
+  const calculateProgress = () => {
+    return (activeSection / (steps.length - 1)) * 100;
+  };
+
+  return (
+    <div style={mobileStyles.stepContainer}>
+      <div style={mobileStyles.stepsWrapper}>
+        <div style={mobileStyles.progressLine}>
+          <div style={{
+            ...mobileStyles.progressLineFilled,
+            width: `${calculateProgress()}%`
+          }} />
+        </div>
+        {steps.map((step, index) => (
+          <div
+            key={index}
+            onClick={() => setActiveSection(index)}
+            style={{ position: 'relative', cursor: 'pointer' }}
+          >
+            <div style={{
+              ...mobileStyles.stepCircle,
+              ...(index === activeSection && mobileStyles.stepCircleActive),
+              ...(index < activeSection && mobileStyles.stepCircleCompleted),
+            }}>
+              {index + 1}
+            </div>
+            <div style={mobileStyles.stepLabel}>
+              {step}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={mobileStyles.currentStepText}>
+        Step {activeSection + 1}: {steps[activeSection]}
+      </div>
+    </div>
+  );
+};
+
+
 
 export const ResumeDocument = ({ data, template = 'professional' }: { data: any, template?: string }) => {
   const getStyles = () => {
