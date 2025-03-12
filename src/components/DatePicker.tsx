@@ -1,9 +1,10 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useState, useEffect } from 'react';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { enUS, tr } from 'date-fns/locale';
 import { DateTime } from 'luxon';
 
+// Register all locales you plan to support
 registerLocale('en-US', enUS);
 registerLocale('tr', tr);
 
@@ -17,6 +18,7 @@ interface DatePickerProps {
   isClearable?: boolean;
   minDate?: Date;
   maxDate?: Date;
+  locale?: string; // Add locale as a configurable prop
 }
 
 const DatePicker: React.FC<DatePickerProps> = ({
@@ -29,8 +31,64 @@ const DatePicker: React.FC<DatePickerProps> = ({
   isClearable = false,
   minDate,
   maxDate,
+  locale: userLocale, // Allow user to pass locale explicitly
 }) => {
   const [isYearView, setIsYearView] = useState(false);
+  const [currentLocale, setCurrentLocale] = useState<string>(userLocale || 'en-US');
+  
+  // Get system locale on component mount
+  useEffect(() => {
+    if (!userLocale) {
+      try {
+        // Get browser language, if not explicitly provided
+        const browserLang = navigator.language || navigator.languages[0] || 'en-US';
+        
+        // Map browser language to supported locales
+        // This is a simple mapping - you may need to expand this for more languages
+        const localeMap: Record<string, string> = {
+          'tr': 'tr',
+          'tr-TR': 'tr',
+          'en': 'en-US',
+          'en-US': 'en-US',
+          'en-GB': 'en-US',
+        };
+        
+        // Find the closest match or default to en-US
+        const detectedLocale = Object.keys(localeMap).find(key => 
+          browserLang.startsWith(key)
+        );
+        
+        setCurrentLocale(detectedLocale ? localeMap[detectedLocale] : 'en-US');
+      } catch (error) {
+        console.error('Error detecting locale:', error);
+        setCurrentLocale('en-US'); // Fallback to en-US
+      }
+    }
+  }, [userLocale]);
+
+  // Get month names based on locale
+  const getLocalizedMonths = () => {
+    try {
+      const months = [];
+      const localeObj = currentLocale === 'tr' ? tr : enUS;
+      
+      // Get localized month names
+      for (let i = 0; i < 12; i++) {
+        const date = new Date(2000, i, 1);
+        const month = date.toLocaleString(currentLocale.replace('_', '-'), { month: 'long' });
+        months.push(month);
+      }
+      
+      return months;
+    } catch (error) {
+      console.error('Error getting localized months:', error);
+      // Fallback to English month names
+      return [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+    }
+  };
 
   // Custom header component for the calendar
   const CustomHeader = ({
@@ -43,10 +101,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     nextMonthButtonDisabled,
   }: any) => {
     const years = Array.from({ length: 12 }, (_, i) => new Date().getFullYear() - 6 + i);
-    const months = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
+    const months = getLocalizedMonths();
 
     return (
       <div className="flex flex-col">
@@ -116,26 +171,62 @@ const DatePicker: React.FC<DatePickerProps> = ({
     )
   );
 
+  // Get appropriate date format based on locale
+  const getLocalizedDateFormat = () => {
+    if (dateFormat) return dateFormat;
+    
+    // Default formats by locale if not specified
+    switch (currentLocale) {
+      case 'tr':
+        return 'dd.MM.yyyy';
+      case 'en-US':
+        return 'MM/dd/yyyy';
+      default:
+        return 'dd/MM/yyyy';
+    }
+  };
+
   const handleChange = (date: Date | null) => {
     try {
-      console.log('Selected date:', date);
-      if (date) {
-        // Use luxon for consistent date handling
-        const luxonDate = DateTime.fromJSDate(date).toUTC();
-        console.log('Luxon date:', luxonDate.toISO());
-        if (minDate && luxonDate < DateTime.fromJSDate(minDate).toUTC()) {
+      if (!date) {
+        onChange(null);
+        return;
+      }
+      
+      // Important: Create a clean date object to prevent locale-specific issues
+      // This ensures the date is properly interpreted regardless of the browser's locale
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDate();
+      
+      // Create a clean date object using UTC
+      const cleanDate = new Date(Date.UTC(year, month, day));
+      
+      // Validate against min/max dates if provided
+      if (minDate) {
+        const minDateTime = DateTime.fromJSDate(minDate).startOf('day');
+        const selectedDateTime = DateTime.fromJSDate(cleanDate).startOf('day');
+        
+        if (selectedDateTime < minDateTime) {
           throw new Error('Selected date is before the minimum allowed date.');
         }
-        if (maxDate && luxonDate > DateTime.fromJSDate(maxDate).toUTC()) {
+      }
+      
+      if (maxDate) {
+        const maxDateTime = DateTime.fromJSDate(maxDate).endOf('day');
+        const selectedDateTime = DateTime.fromJSDate(cleanDate).startOf('day');
+        
+        if (selectedDateTime > maxDateTime) {
           throw new Error('Selected date is after the maximum allowed date.');
         }
-        onChange(luxonDate.toJSDate());
-      } else {
-        onChange(date);
       }
+      
+      // Pass the clean date to the onChange handler
+      onChange(cleanDate);
+      
     } catch (error) {
+      console.error('Error in handleChange:', error);
       if (error instanceof Error) {
-        console.error('Error in handleChange:', error);
         alert(error.message);
       }
     }
@@ -149,7 +240,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       renderCustomHeader={CustomHeader}
       showMonthYearPicker={showMonthYearPicker}
       showPopperArrow={false}
-      dateFormat={dateFormat}
+      dateFormat={getLocalizedDateFormat()}
       isClearable={isClearable}
       minDate={minDate}
       maxDate={maxDate}
@@ -157,7 +248,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       wrapperClassName="w-full"
       popperClassName="z-[9999]"
       popperPlacement="bottom-start"
-      locale="tr"
+      locale={currentLocale}
       dayClassName={(date) =>
         selected && date.getDate() === selected.getDate() && date.getMonth() === selected.getMonth()
           ? 'bg-indigo-500 text-white rounded-full hover:bg-indigo-600'
@@ -203,4 +294,4 @@ const CalendarIcon = () => (
   </svg>
 );
 
-export default DatePicker; 
+export default DatePicker;
