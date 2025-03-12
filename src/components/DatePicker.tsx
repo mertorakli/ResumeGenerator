@@ -2,7 +2,7 @@ import React, { forwardRef, useState } from 'react';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { enUS } from 'date-fns/locale';
-import { format, parse } from 'date-fns';
+import { DateTime } from 'luxon';
 
 registerLocale('en-US', enUS);
 
@@ -119,17 +119,16 @@ const DatePicker: React.FC<DatePickerProps> = ({
     try {
       console.log('Selected date:', date);
       if (date) {
-        // Format and parse date to ensure consistency
-        const formattedDate = format(date, 'yyyy-MM-dd');
-        const parsedDate = parse(formattedDate, 'yyyy-MM-dd', new Date());
-        console.log('Parsed date:', parsedDate);
-        if (minDate && parsedDate < minDate) {
+        // Use luxon for consistent date handling
+        const luxonDate = DateTime.fromJSDate(date).toUTC();
+        console.log('Luxon date:', luxonDate.toISO());
+        if (minDate && luxonDate < DateTime.fromJSDate(minDate).toUTC()) {
           throw new Error('Selected date is before the minimum allowed date.');
         }
-        if (maxDate && parsedDate > maxDate) {
+        if (maxDate && luxonDate > DateTime.fromJSDate(maxDate).toUTC()) {
           throw new Error('Selected date is after the maximum allowed date.');
         }
-        onChange(parsedDate);
+        onChange(luxonDate.toJSDate());
       } else {
         onChange(date);
       }
