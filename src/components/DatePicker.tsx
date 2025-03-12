@@ -111,10 +111,27 @@ const DatePicker: React.FC<DatePickerProps> = ({
     )
   );
 
+  const handleChange = (date: Date | null) => {
+    try {
+      if (date && minDate && date < minDate) {
+        throw new Error('Selected date is before the minimum allowed date.');
+      }
+      if (date && maxDate && date > maxDate) {
+        throw new Error('Selected date is after the maximum allowed date.');
+      }
+      onChange(date);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error);
+        alert(error.message);
+      }
+    }
+  };
+
   return (
     <ReactDatePicker
       selected={selected}
-      onChange={onChange}
+      onChange={handleChange}
       customInput={<CustomInput placeholder={placeholder} />}
       renderCustomHeader={CustomHeader}
       showMonthYearPicker={showMonthYearPicker}
