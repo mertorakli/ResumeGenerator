@@ -113,13 +113,19 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
   const handleChange = (date: Date | null) => {
     try {
-      if (date && minDate && date < minDate) {
-        throw new Error('Selected date is before the minimum allowed date.');
+      if (date) {
+        // Convert to UTC to avoid time zone issues
+        const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        if (minDate && utcDate < minDate) {
+          throw new Error('Selected date is before the minimum allowed date.');
+        }
+        if (maxDate && utcDate > maxDate) {
+          throw new Error('Selected date is after the maximum allowed date.');
+        }
+        onChange(utcDate);
+      } else {
+        onChange(date);
       }
-      if (date && maxDate && date > maxDate) {
-        throw new Error('Selected date is after the maximum allowed date.');
-      }
-      onChange(date);
     } catch (error) {
       if (error instanceof Error) {
         console.error(error);
