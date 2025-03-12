@@ -338,8 +338,8 @@ export default function ResumeForm() {
             {/* Remove the progress bar from here since we moved it to the top */}
             
             {/* Step indicators */}
-            <div className="flex justify-between items-center w-full relative">
-              {steps.map((step, index) => (
+          <div className="flex justify-between items-center w-full relative">
+            {steps.map((step, index) => (
                 <div 
                   key={step.id} 
                   className="flex flex-col items-center cursor-pointer z-10" 
@@ -352,13 +352,13 @@ export default function ResumeForm() {
                         : index === currentStep 
                           ? 'bg-indigo-500 text-white ring-4 ring-indigo-300' 
                           : 'bg-white text-gray-500'
-                    }`}
-                  >
-                    {index + 1}
-                  </div>
-                  <span className="text-xs mt-2 text-white text-center hidden sm:block">{step.title}</span>
+                  }`}
+                >
+                  {index + 1}
                 </div>
-              ))}
+                  <span className="text-xs mt-2 text-white text-center hidden sm:block">{step.title}</span>
+              </div>
+            ))}
             </div>
             
             {/* Current step label for mobile */}
@@ -458,7 +458,7 @@ export default function ResumeForm() {
                 <div className="space-y-6">
                   <h2 className="text-2xl font-bold text-white mb-4">Experience</h2>
                   <div className="space-y-4">
-                    {experienceArray.fields.map((field, index) => (
+                  {experienceArray.fields.map((field, index) => (
                       <Accordion
                         key={field.id}
                         title={watch(`experience.${index}.title`) || `Job ${index + 1}`}
@@ -468,38 +468,38 @@ export default function ResumeForm() {
                           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                               <label className="block text-sm font-medium text-gray-700">Job Title</label>
-                              <input
-                                type="text"
-                                {...register(`experience.${index}.title`)}
+                          <input
+                            type="text"
+                            {...register(`experience.${index}.title`)}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                              />
+                          />
                               {errors.experience?.[index]?.title && (
                                 <p className="mt-1 text-sm text-red-600">{errors.experience[index]?.title?.message}</p>
                               )}
-                            </div>
+                        </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">Company</label>
-                              <input
-                                type="text"
-                                {...register(`experience.${index}.company`)}
+                          <input
+                            type="text"
+                            {...register(`experience.${index}.company`)}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                              />
+                          />
                               {errors.experience?.[index]?.company && (
                                 <p className="mt-1 text-sm text-red-600">{errors.experience[index]?.company?.message}</p>
                               )}
-                            </div>
-                          </div>
+                        </div>
+                      </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700">Location</label>
-                            <input
-                              type="text"
-                              {...register(`experience.${index}.location`)}
+                          <input
+                            type="text"
+                            {...register(`experience.${index}.location`)}
                               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                            />
+                          />
                             {errors.experience?.[index]?.location && (
                               <p className="mt-1 text-sm text-red-600">{errors.experience[index]?.location?.message}</p>
                             )}
-                          </div>
+                        </div>
                           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                               <label className="block text-sm font-medium text-gray-700">Start Date</label>
@@ -512,7 +512,7 @@ export default function ResumeForm() {
                               {errors.experience?.[index]?.startDate && (
                                 <p className="mt-1 text-sm text-red-600">{errors.experience[index]?.startDate?.message}</p>
                               )}
-                            </div>
+                        </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">End Date</label>
                               <DatePicker
@@ -521,35 +521,35 @@ export default function ResumeForm() {
                                 placeholder="MM/DD/YYYY or leave blank for 'Present'"
                                 dateFormat="MM/dd/yyyy"
                                 isClearable={true}
-                              />
-                            </div>
-                          </div>
+                          />
+                        </div>
+                      </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700">Description</label>
-                            <textarea
-                              {...register(`experience.${index}.description`)}
+                          <textarea
+                            {...register(`experience.${index}.description`)}
                               rows={4}
                               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                            />
+                          />
                             {errors.experience?.[index]?.description && (
                               <p className="mt-1 text-sm text-red-600">{errors.experience[index]?.description?.message}</p>
                             )}
-                          </div>
-                          {index > 0 && (
+                        </div>
+                      {index > 0 && (
                             <div className="flex justify-end">
-                              <button
-                                type="button"
+                          <button
+                            type="button"
                                 onClick={() => removeExperience(index)}
                                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          )}
+                          >
+                            Remove
+                          </button>
                         </div>
+                      )}
+                    </div>
                       </Accordion>
-                    ))}
-                  </div>
+                  ))}
+                </div>
                   <div className="flex justify-end">
                     <button
                       type="button"
@@ -566,7 +566,7 @@ export default function ResumeForm() {
                 <div className="space-y-6">
                   <h2 className="text-2xl font-bold text-white mb-4">Education</h2>
                   <div className="space-y-4">
-                    {educationArray.fields.map((field, index) => (
+                  {educationArray.fields.map((field, index) => (
                       <Accordion
                         key={field.id}
                         title={watch(`education.${index}.degree`) || `Degree ${index + 1}`}
@@ -576,38 +576,38 @@ export default function ResumeForm() {
                           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                               <label className="block text-sm font-medium text-gray-700">Degree</label>
-                              <input
-                                type="text"
-                                {...register(`education.${index}.degree`)}
+                          <input
+                            type="text"
+                            {...register(`education.${index}.degree`)}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                              />
+                          />
                               {errors.education?.[index]?.degree && (
                                 <p className="mt-1 text-sm text-red-600">{errors.education[index]?.degree?.message}</p>
                               )}
-                            </div>
+                        </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">School</label>
-                              <input
-                                type="text"
-                                {...register(`education.${index}.school`)}
+                          <input
+                            type="text"
+                            {...register(`education.${index}.school`)}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                              />
+                          />
                               {errors.education?.[index]?.school && (
                                 <p className="mt-1 text-sm text-red-600">{errors.education[index]?.school?.message}</p>
                               )}
-                            </div>
-                          </div>
+                        </div>
+                      </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700">Location</label>
-                            <input
-                              type="text"
-                              {...register(`education.${index}.location`)}
+                          <input
+                            type="text"
+                            {...register(`education.${index}.location`)}
                               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                            />
+                          />
                             {errors.education?.[index]?.location && (
                               <p className="mt-1 text-sm text-red-600">{errors.education[index]?.location?.message}</p>
                             )}
-                          </div>
+                        </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700">Graduation Date</label>
                             <DatePicker
@@ -620,19 +620,19 @@ export default function ResumeForm() {
                             {errors.education?.[index]?.graduationDate && (
                               <p className="mt-1 text-sm text-red-600">{errors.education[index]?.graduationDate?.message}</p>
                             )}
-                          </div>
-                          {index > 0 && (
+                        </div>
+                      {index > 0 && (
                             <div className="flex justify-end">
-                              <button
-                                type="button"
+                          <button
+                            type="button"
                                 onClick={() => removeEducation(index)}
                                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          )}
+                          >
+                            Remove
+                          </button>
                         </div>
+                      )}
+                    </div>
                       </Accordion>
                     ))}
                   </div>
@@ -692,7 +692,7 @@ export default function ResumeForm() {
                   <h2 className="text-2xl font-bold text-white mb-4">Language Skills</h2>
                   
                   <div className="bg-white bg-opacity-95 rounded-xl shadow-lg overflow-hidden">
-                    {languageArray.fields.map((field, index) => (
+                  {languageArray.fields.map((field, index) => (
                       <div 
                         key={field.id}
                         className={`border-b border-gray-100 ${index === languageArray.fields.length - 1 ? 'border-b-0' : ''}`}
@@ -717,8 +717,8 @@ export default function ResumeForm() {
                                 {watch(`languages.${index}.proficiency`)}
                               </span>
                             )}
-                            <button
-                              type="button"
+                        <button
+                          type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 languageArray.remove(index);
@@ -730,8 +730,8 @@ export default function ResumeForm() {
                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
                                 <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                               </svg>
-                            </button>
-                          </div>
+                        </button>
+                      </div>
                         </div>
                         
                         <div className="p-4 bg-gray-50 border-t border-gray-100">
@@ -770,17 +770,17 @@ export default function ResumeForm() {
                     ))}
                     
                     <div className="p-4 bg-gray-50">
-                      <button
-                        type="button"
-                        onClick={addLanguage}
+                  <button
+                    type="button"
+                    onClick={addLanguage}
                         className="w-full flex items-center justify-center px-4 py-2 bg-indigo-50 text-indigo-600 rounded-md hover:bg-indigo-100 transition-colors duration-200"
-                      >
+                  >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
                           <line x1="12" y1="5" x2="12" y2="19"></line>
                           <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
-                        Add Language
-                      </button>
+                    Add Language
+                  </button>
                     </div>
                   </div>
                 </div>
@@ -791,7 +791,7 @@ export default function ResumeForm() {
                   <h2 className="text-2xl font-bold text-white mb-4">Custom Sections</h2>
                   
                   <div className="bg-white bg-opacity-95 rounded-xl shadow-lg overflow-hidden">
-                    {customSectionArray.fields.map((field, index) => (
+                  {customSectionArray.fields.map((field, index) => (
                       <div 
                         key={field.id}
                         className={`border-b border-gray-100 ${index === customSectionArray.fields.length - 1 ? 'border-b-0' : ''}`}
@@ -809,62 +809,62 @@ export default function ResumeForm() {
                             </div>
                             <h3 className="font-medium text-gray-800">{field.title || 'Custom Section'}</h3>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => removeCustomSection(index)}
+                      <button
+                        type="button"
+                        onClick={() => removeCustomSection(index)}
                             className="text-red-500 hover:text-red-700 transition-colors duration-200"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <path d="M3 6h18"></path>
                               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
                               <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                            </svg>
-                          </button>
+                        </svg>
+                      </button>
                         </div>
                         
                         <div className="p-4 bg-gray-50 border-t border-gray-100">
                           <div className="space-y-4">
-                            <div>
+                      <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">Section Title</label>
-                              <input
-                                type="text"
-                                {...register(`customSections.${index}.title`)}
+                        <input
+                          type="text"
+                          {...register(`customSections.${index}.title`)}
                                 className="block w-full rounded-md bg-white border border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-900 p-2.5"
                                 placeholder="e.g., Projects, Certifications, Awards"
-                              />
-                              {errors.customSections?.[index]?.title && (
-                                <p className="mt-1 text-sm text-red-600">{errors.customSections[index]?.title?.message}</p>
-                              )}
-                            </div>
-                            <div>
+                        />
+                        {errors.customSections?.[index]?.title && (
+                          <p className="mt-1 text-sm text-red-600">{errors.customSections[index]?.title?.message}</p>
+                        )}
+                      </div>
+                      <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                              <textarea
-                                {...register(`customSections.${index}.description`)}
-                                rows={4}
+                        <textarea
+                          {...register(`customSections.${index}.description`)}
+                          rows={4}
                                 className="block w-full rounded-md bg-white border border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-gray-900 p-2.5"
                                 placeholder="Describe your achievements, projects, or other relevant information"
-                              />
-                              {errors.customSections?.[index]?.description && (
-                                <p className="mt-1 text-sm text-red-600">{errors.customSections[index]?.description?.message}</p>
-                              )}
+                        />
+                        {errors.customSections?.[index]?.description && (
+                          <p className="mt-1 text-sm text-red-600">{errors.customSections[index]?.description?.message}</p>
+                        )}
                             </div>
                           </div>
-                        </div>
                       </div>
-                    ))}
+                    </div>
+                  ))}
                     
                     <div className="p-4 bg-gray-50">
-                      <button
-                        type="button"
-                        onClick={addCustomSection}
+                  <button
+                    type="button"
+                    onClick={addCustomSection}
                         className="w-full flex items-center justify-center px-4 py-2 bg-indigo-50 text-indigo-600 rounded-md hover:bg-indigo-100 transition-colors duration-200"
-                      >
+                  >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
                           <line x1="12" y1="5" x2="12" y2="19"></line>
                           <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
-                        Add Section
-                      </button>
+                    Add Section
+                  </button>
                     </div>
                   </div>
                 </div>
@@ -902,28 +902,28 @@ export default function ResumeForm() {
                             {errors.personalInfo?.fullName && (
                               <p className="mt-1 text-sm text-red-600">{errors.personalInfo.fullName.message}</p>
                             )}
-                          </div>
+                    </div>
                           <div className={`bg-gray-50 p-4 rounded-lg ${errors.personalInfo?.email ? 'border border-red-300' : ''}`}>
                             <p className="text-sm text-gray-500 mb-1">Email</p>
                             <p className="text-gray-800 font-medium">{watch('personalInfo.email') || 'Not provided'}</p>
                             {errors.personalInfo?.email && (
                               <p className="mt-1 text-sm text-red-600">{errors.personalInfo.email.message}</p>
                             )}
-                          </div>
+                        </div>
                           <div className={`bg-gray-50 p-4 rounded-lg ${errors.personalInfo?.phone ? 'border border-red-300' : ''}`}>
                             <p className="text-sm text-gray-500 mb-1">Phone</p>
                             <p className="text-gray-800 font-medium">{watch('personalInfo.phone') || 'Not provided'}</p>
                             {errors.personalInfo?.phone && (
                               <p className="mt-1 text-sm text-red-600">{errors.personalInfo.phone.message}</p>
                             )}
-                          </div>
+                    </div>
                           <div className={`bg-gray-50 p-4 rounded-lg ${errors.personalInfo?.location ? 'border border-red-300' : ''}`}>
                             <p className="text-sm text-gray-500 mb-1">Location</p>
                             <p className="text-gray-800 font-medium">{watch('personalInfo.location') || 'Not provided'}</p>
                             {errors.personalInfo?.location && (
                               <p className="mt-1 text-sm text-red-600">{errors.personalInfo.location.message}</p>
                             )}
-                          </div>
+                    </div>
                         </div>
                         <div className={`mt-4 bg-gray-50 p-4 rounded-lg ${errors.personalInfo?.summary ? 'border border-red-300' : ''}`}>
                           <p className="text-sm text-gray-500 mb-1">Professional Summary</p>
@@ -961,14 +961,14 @@ export default function ResumeForm() {
                               return (
                                 <div key={index} className={`bg-gray-50 p-4 rounded-lg ${hasErrors ? 'border border-red-300' : ''}`}>
                                   <div className="flex justify-between items-start">
-                                    <div>
+                    <div>
                                       <h4 className="font-medium text-gray-800">{exp.title || 'No title provided'}</h4>
                                       <p className="text-gray-600">{exp.company || 'No company provided'}</p>
-                                    </div>
+                        </div>
                                     <div className="text-right">
                                       <p className="text-gray-600">{exp.location || 'No location provided'}</p>
                                       <p className="text-sm text-gray-500">{exp.startDate || 'No start date'} - {exp.endDate || 'Present'}</p>
-                                    </div>
+                    </div>
                                   </div>
                                   <p className="mt-2 text-gray-700 whitespace-pre-line">{exp.description || 'No description provided'}</p>
                                   {hasErrors && (
@@ -1024,10 +1024,10 @@ export default function ResumeForm() {
                               return (
                                 <div key={index} className={`bg-gray-50 p-4 rounded-lg ${hasErrors ? 'border border-red-300' : ''}`}>
                                   <div className="flex justify-between items-start">
-                                    <div>
+                    <div>
                                       <h4 className="font-medium text-gray-800">{edu.degree || 'No degree provided'}</h4>
                                       <p className="text-gray-600">{edu.school || 'No school provided'}</p>
-                                    </div>
+                        </div>
                                     <div className="text-right">
                                       <p className="text-gray-600">{edu.location || 'No location provided'}</p>
                                       <p className="text-sm text-gray-500">{edu.graduationDate || 'No graduation date provided'}</p>
@@ -1083,14 +1083,14 @@ export default function ResumeForm() {
                                 <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
                                   {skill}
                                 </span>
-                              ))}
-                            </div>
-                          </div>
+                      ))}
+                    </div>
+                  </div>
                         )}
                         {errors.skills && (
                           <p className="mt-1 text-sm text-red-600">{errors.skills.message}</p>
                         )}
-                      </div>
+                </div>
                       
                       {/* Languages */}
                       <div className="mb-8">
@@ -1175,15 +1175,15 @@ export default function ResumeForm() {
                       )}
                     </div>
                   </div>
-                  
-                  {validationError && (
+
+          {validationError && (
                     <div className="p-6 bg-red-50 border border-red-200 rounded-lg">
                       <div className="flex items-start">
                         <div className="flex-shrink-0">
                           <svg className="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                           </svg>
-                        </div>
+            </div>
                         <div className="ml-3 w-full">
                           <h3 className="text-lg font-medium text-red-800">Please fix the following errors:</h3>
                           <div className="mt-2 text-red-700">
