@@ -1,10 +1,11 @@
 import React, { forwardRef, useState } from 'react';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { enUS } from 'date-fns/locale';
+import { enUS, tr } from 'date-fns/locale';
 import { DateTime } from 'luxon';
 
 registerLocale('en-US', enUS);
+registerLocale('tr', tr);
 
 interface DatePickerProps {
   selected: Date | null;
@@ -24,7 +25,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
   placeholder = 'Select date',
   className = '',
   showMonthYearPicker = false,
-  dateFormat = 'MM/dd/yyyy',
+  dateFormat = 'dd/MM/yyyy',
   isClearable = false,
   minDate,
   maxDate,
@@ -156,7 +157,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       wrapperClassName="w-full"
       popperClassName="z-[9999]"
       popperPlacement="bottom-start"
-      locale="en-US"
+      locale="tr"
       dayClassName={(date) =>
         selected && date.getDate() === selected.getDate() && date.getMonth() === selected.getMonth()
           ? 'bg-indigo-500 text-white rounded-full hover:bg-indigo-600'
