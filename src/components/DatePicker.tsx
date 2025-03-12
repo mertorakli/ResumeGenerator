@@ -1,6 +1,9 @@
 import React, { forwardRef, useState } from 'react';
-import ReactDatePicker from 'react-datepicker';
+import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { enUS } from 'date-fns/locale';
+
+registerLocale('en-US', enUS);
 
 interface DatePickerProps {
   selected: Date | null;
@@ -113,9 +116,11 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
   const handleChange = (date: Date | null) => {
     try {
+      console.log('Selected date:', date);
       if (date) {
         // Convert to UTC to avoid time zone issues
         const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        console.log('UTC date:', utcDate);
         if (minDate && utcDate < minDate) {
           throw new Error('Selected date is before the minimum allowed date.');
         }
@@ -128,7 +133,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       }
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error);
+        console.error('Error in handleChange:', error);
         alert(error.message);
       }
     }
@@ -150,6 +155,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       wrapperClassName="w-full"
       popperClassName="z-[9999]"
       popperPlacement="bottom-start"
+      locale="en-US"
       dayClassName={(date) =>
         selected && date.getDate() === selected.getDate() && date.getMonth() === selected.getMonth()
           ? 'bg-indigo-500 text-white rounded-full hover:bg-indigo-600'
