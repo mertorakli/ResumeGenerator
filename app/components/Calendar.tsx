@@ -1,4 +1,5 @@
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
+import parseISO from 'date-fns/parseISO';
 
 function handleDateSelect(selectedDate: Date) {
     // Convert to ISO string for consistent storage
