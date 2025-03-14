@@ -1,61 +1,77 @@
-export const testResumeData = {
+import { ResumeData } from '@/types/resume'
+
+export const testResumeData: ResumeData = {
   personalInfo: {
-    fullName: "John Doe",
-    email: "john.doe@example.com",
-    phone: "+1 (555) 123-4567",
-    location: "San Francisco, CA",
-    summary: "Experienced software engineer with 5+ years of expertise in full-stack development. Passionate about creating efficient, scalable solutions and mentoring junior developers. Strong background in React, Node.js, and cloud technologies.",
+    fullName: 'Emily Johnson',
+    email: 'emily.johnson@gmail.com',
+    phone: '+1 (555) 123-4567',
+    location: 'San Francisco, CA',
+    summary: 'Results-driven software engineer with 5 years of experience in full-stack development. Specialized in building scalable web applications using React, Node.js, and cloud technologies. Led multiple successful projects and mentored junior developers.',
   },
   experience: [
     {
-      title: "Senior Software Engineer",
-      company: "Tech Solutions Inc.",
-      location: "San Francisco, CA",
-      startDate: "2021-01",
-      endDate: "2024-03",
-      description: "Led development of enterprise-scale applications, mentored junior developers, and implemented CI/CD pipelines resulting in 40% faster deployment times.",
+      title: 'Senior Software Engineer',
+      company: 'TechCorp Solutions',
+      location: 'San Francisco, CA',
+      startDate: '2021-03-01',
+      endDate: '',
+      description: 'Lead developer for the company\'s flagship product, managing a team of 5 engineers. Improved application performance by 40% through optimization and modernization of the tech stack. Implemented CI/CD pipeline reducing deployment time by 60%.',
     },
     {
-      title: "Software Engineer",
-      company: "Digital Innovations Ltd",
-      location: "Boston, MA",
-      startDate: "2019-03",
-      endDate: "2020-12",
-      description: "Developed and maintained multiple client-facing applications using React and Node.js. Improved application performance by 60% through optimization techniques.",
-    }
+      title: 'Software Engineer',
+      company: 'InnovateTech',
+      location: 'Seattle, WA',
+      startDate: '2018-06-01',
+      endDate: '2021-02-28',
+      description: 'Developed and maintained multiple client-facing applications using React and TypeScript. Collaborated with UX team to implement responsive designs. Reduced bug reports by 30% through implementation of comprehensive testing strategy.',
+    },
   ],
   education: [
     {
-      degree: "Master of Science in Computer Science",
-      school: "Stanford University",
-      location: "Stanford, CA",
-      graduationDate: "2019-05",
+      degree: 'Master of Science in Computer Science',
+      school: 'University of California, Berkeley',
+      location: 'Berkeley, CA',
+      graduationDate: '2018-05-15',
     },
     {
-      degree: "Bachelor of Science in Software Engineering",
-      school: "MIT",
-      location: "Cambridge, MA",
-      graduationDate: "2017-05",
-    }
+      degree: 'Bachelor of Science in Software Engineering',
+      school: 'University of Washington',
+      location: 'Seattle, WA',
+      graduationDate: '2016-06-20',
+    },
   ],
   skills: [
-    "JavaScript",
-    "TypeScript",
-    "React",
-    "Node.js",
-    "Python",
-    "AWS",
-    "Docker",
-    "CI/CD",
-    "Agile Methodologies",
-    "Team Leadership"
+    'React.js',
+    'TypeScript',
+    'Node.js',
+    'Python',
+    'AWS',
+    'Docker',
+    'GraphQL',
+    'Agile Development',
   ],
   languages: [
-    { language: "English", proficiency: "Native" },
-    { language: "Spanish", proficiency: "Fluent" }
+    {
+      language: 'English',
+      proficiency: 'Native',
+    },
+    {
+      language: 'Spanish',
+      proficiency: 'Professional Working',
+    },
+    {
+      language: 'Mandarin',
+      proficiency: 'Elementary',
+    },
   ],
   customSections: [
-    { title: "Projects", description: "Developed a real-time chat application using WebSocket and Node.js, achieving 99.9% uptime." },
-    { title: "Volunteering", description: "Volunteered as a coding mentor for underprivileged youth, teaching basic programming skills." }
-  ]
-}; 
+    {
+      title: 'Certifications',
+      description: '• AWS Certified Solutions Architect - Professional\n• Google Cloud Professional Developer\n• Certified Scrum Master (CSM)',
+    },
+    {
+      title: 'Projects & Achievements',
+      description: '• Open Source Contributor - Core contributor to React-Query library\n• Speaker at ReactConf 2022 - "Building Scalable React Applications"\n• Patent Pending - Method for Optimizing Cloud Resource Allocation (US Patent App. 123,456)',
+    },
+  ],
+} 
