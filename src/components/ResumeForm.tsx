@@ -353,11 +353,11 @@ export default function ResumeForm() {
                           ? 'bg-indigo-500 text-white ring-4 ring-indigo-300' 
                           : 'bg-white text-gray-500'
                   }`}
-                >
-                  {index + 1}
-                </div>
+                  >
+                    {index + 1}
+                  </div>
                   <span className="text-xs mt-2 text-white text-center hidden sm:block">{step.title}</span>
-              </div>
+                </div>
             ))}
             </div>
             
@@ -505,9 +505,9 @@ export default function ResumeForm() {
                               <label className="block text-sm font-medium text-gray-700">Start Date</label>
                               <DatePicker
                                 selected={watch(`experience.${index}.startDate`) ? new Date(watch(`experience.${index}.startDate`)) : null}
-                                onChange={(date) => setValue(`experience.${index}.startDate`, date ? date.toLocaleDateString() : '')}
-                                placeholder="MM/DD/YYYY"
-                                dateFormat="MM/dd/yyyy"
+                                onChange={(date) => setValue(`experience.${index}.startDate`, date ? date.toISOString() : '')}
+                                placeholder="DD.MM.YY"
+                                dateFormat="dd.MM.yy"
                               />
                               {errors.experience?.[index]?.startDate && (
                                 <p className="mt-1 text-sm text-red-600">{errors.experience[index]?.startDate?.message}</p>
@@ -517,9 +517,9 @@ export default function ResumeForm() {
                               <label className="block text-sm font-medium text-gray-700">End Date</label>
                               <DatePicker
                                 selected={watch(`experience.${index}.endDate`) ? new Date(watch(`experience.${index}.endDate`)) : null}
-                                onChange={(date) => setValue(`experience.${index}.endDate`, date ? date.toLocaleDateString() : '')}
-                                placeholder="MM/DD/YYYY or leave blank for 'Present'"
-                                dateFormat="MM/dd/yyyy"
+                                onChange={(date) => setValue(`experience.${index}.endDate`, date ? date.toISOString() : '')}
+                                placeholder="DD.MM.YY or leave blank for 'Present'"
+                                dateFormat="dd.MM.yy"
                                 isClearable={true}
                           />
                         </div>
@@ -612,9 +612,9 @@ export default function ResumeForm() {
                             <label className="block text-sm font-medium text-gray-700">Graduation Date</label>
                             <DatePicker
                               selected={watch(`education.${index}.graduationDate`) ? new Date(watch(`education.${index}.graduationDate`)) : null}
-                              onChange={(date) => setValue(`education.${index}.graduationDate`, date ? date.toLocaleDateString() : '')}
-                              placeholder="MM/DD/YYYY"
-                              dateFormat="MM/dd/yyyy"
+                              onChange={(date) => setValue(`education.${index}.graduationDate`, date ? date.toISOString() : '')}
+                              placeholder="DD.MM.YY"
+                              dateFormat="dd.MM.yy"
                               showMonthYearPicker={true}
                             />
                             {errors.education?.[index]?.graduationDate && (
@@ -967,8 +967,12 @@ export default function ResumeForm() {
                         </div>
                                     <div className="text-right">
                                       <p className="text-gray-600">{exp.location || 'No location provided'}</p>
-                                      <p className="text-sm text-gray-500">{exp.startDate || 'No start date'} - {exp.endDate || 'Present'}</p>
-                    </div>
+                                      <p className="text-sm text-gray-500">
+                                        {exp.startDate ? new Date(exp.startDate).toLocaleDateString(undefined, {day: '2-digit', month: '2-digit', year: '2-digit'}) : 'No start date'} 
+                                        - 
+                                        {exp.endDate ? new Date(exp.endDate).toLocaleDateString(undefined, {day: '2-digit', month: '2-digit', year: '2-digit'}) : 'Present'}
+                                      </p>
+                                    </div>
                                   </div>
                                   <p className="mt-2 text-gray-700 whitespace-pre-line">{exp.description || 'No description provided'}</p>
                                   {hasErrors && (
@@ -1030,7 +1034,9 @@ export default function ResumeForm() {
                         </div>
                                     <div className="text-right">
                                       <p className="text-gray-600">{edu.location || 'No location provided'}</p>
-                                      <p className="text-sm text-gray-500">{edu.graduationDate || 'No graduation date provided'}</p>
+                                      <p className="text-sm text-gray-500">
+                                        {edu.graduationDate ? new Date(edu.graduationDate).toLocaleDateString(undefined, {day: '2-digit', month: '2-digit', year: '2-digit'}) : 'No graduation date provided'}
+                                      </p>
                                     </div>
                                   </div>
                                   {hasErrors && (
