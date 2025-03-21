@@ -1,7 +1,48 @@
-import { Document, Page, Text, View, StyleSheet, PDFViewer, } from '@react-pdf/renderer'
+import { Document, Page, Text, View, StyleSheet, PDFViewer, Font } from '@react-pdf/renderer'
 
+/**
+ * This file handles PDF generation for resumes
+ * 
+ * IMPORTANT: We've registered fonts with full Unicode support to ensure 
+ * proper display of special characters from different languages,
+ * particularly Turkish characters like ğ, ı, ş, ç, ö, ü, and İ.
+ * 
+ * The following fonts are used:
+ * - Noto Sans: Excellent Unicode support with all Turkish characters
+ * - Open Sans: Good support for special characters
+ * - Times New Roman: Better alternative to the default Times font
+ */
 
+// Register fonts that support Turkish characters
+Font.register({
+  family: 'Open Sans',
+  fonts: [
+    { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-regular.ttf' },
+    { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-600.ttf', fontWeight: 600 },
+    { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-700.ttf', fontWeight: 700 },
+    { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-italic.ttf', fontStyle: 'italic' },
+  ]
+});
 
+// Register Times font alternatives with better character support
+Font.register({
+  family: 'Times New Roman',
+  fonts: [
+    { src: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/web/standard_fonts/Times-Roman.ttf' },
+    { src: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/web/standard_fonts/Times-Bold.ttf', fontWeight: 'bold' },
+    { src: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/web/standard_fonts/Times-Italic.ttf', fontStyle: 'italic' },
+  ]
+});
+
+// Use Noto Sans for excellent Unicode support, including Turkish characters
+Font.register({
+  family: 'Noto Sans',
+  fonts: [
+    { src: 'https://cdn.jsdelivr.net/npm/@fontsource/noto-sans@4.5.0/files/noto-sans-all-400-normal.woff' },
+    { src: 'https://cdn.jsdelivr.net/npm/@fontsource/noto-sans@4.5.0/files/noto-sans-all-700-normal.woff', fontWeight: 700 },
+    { src: 'https://cdn.jsdelivr.net/npm/@fontsource/noto-sans@4.5.0/files/noto-sans-all-400-italic.woff', fontStyle: 'italic' },
+  ]
+});
 
 type StyleDefinitions = {
   page: {
@@ -199,7 +240,7 @@ const professionalStyles: StyleDefinitions = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#fff',
     padding: '40 60',
-    fontFamily: 'Times-Roman',
+    fontFamily: 'Noto Sans',
   },
   section: {
     marginBottom: 15,
@@ -207,7 +248,7 @@ const professionalStyles: StyleDefinitions = StyleSheet.create({
   header: {
     fontSize: 28,
     marginBottom: 4,
-    fontFamily: 'Times-Roman',
+    fontFamily: 'Noto Sans',
     textAlign: 'center',
   },
   contactInfo: {
@@ -225,7 +266,8 @@ const professionalStyles: StyleDefinitions = StyleSheet.create({
   sectionTitle: {
     fontSize: 14,
     marginBottom: 4,
-    fontFamily: 'Times-Bold',
+    fontFamily: 'Noto Sans',
+    fontWeight: 700,
     borderBottomWidth: 1,
     borderBottomColor: '#000',
     borderBottomStyle: 'solid',
@@ -236,7 +278,8 @@ const professionalStyles: StyleDefinitions = StyleSheet.create({
   },
   jobTitle: {
     fontSize: 12,
-    fontFamily: 'Times-Italic',
+    fontFamily: 'Noto Sans',
+    fontStyle: 'italic',
   },
   jobDetails: {
     fontSize: 12,
@@ -246,7 +289,8 @@ const professionalStyles: StyleDefinitions = StyleSheet.create({
   },
   jobLocation: {
     fontSize: 12,
-    fontFamily: 'Times-Italic',
+    fontFamily: 'Noto Sans',
+    fontStyle: 'italic',
   },
   jobDescription: {
     fontSize: 12,
@@ -281,7 +325,8 @@ const professionalStyles: StyleDefinitions = StyleSheet.create({
   },
   degree: {
     fontSize: 12,
-    fontFamily: 'Times-Italic',
+    fontFamily: 'Noto Sans',
+    fontStyle: 'italic',
   },
   school: {
     fontSize: 12,
@@ -294,7 +339,8 @@ const professionalStyles: StyleDefinitions = StyleSheet.create({
   },
   courseworkTitle: {
     fontSize: 12,
-    fontFamily: 'Times-Bold',
+    fontFamily: 'Noto Sans',
+    fontWeight: 700,
     marginBottom: 2,
   },
   courseworkList: {
@@ -332,7 +378,7 @@ const creativeStyles: StyleDefinitions = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff',
     padding: 0,
-    fontFamily: 'Helvetica',
+    fontFamily: 'Open Sans',
   },
   leftColumn: {
     width: '30%',
@@ -351,7 +397,8 @@ const creativeStyles: StyleDefinitions = StyleSheet.create({
     fontSize: 24,
     marginBottom: 4,
     color: '#000',
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'Open Sans',
+    fontWeight: 700,
   },
   subHeader: {
     fontSize: 14,
@@ -373,14 +420,16 @@ const creativeStyles: StyleDefinitions = StyleSheet.create({
     fontSize: 14,
     marginBottom: 15,
     color: '#fff',
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'Open Sans',
+    fontWeight: 700,
     textTransform: 'uppercase',
   },
   rightSectionTitle: {
     fontSize: 16,
     marginBottom: 15,
     color: '#2D3748',
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'Open Sans',
+    fontWeight: 700,
     textTransform: 'uppercase',
   },
   experienceItem: {
@@ -389,7 +438,8 @@ const creativeStyles: StyleDefinitions = StyleSheet.create({
   jobTitle: {
     fontSize: 14,
     color: '#2D3748',
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'Open Sans',
+    fontWeight: 700,
     marginBottom: 4,
   },
   jobSubTitle: {
@@ -471,7 +521,7 @@ const minimalStyles: StyleDefinitions = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#fff',
     padding: 40,
-    fontFamily: 'Helvetica',
+    fontFamily: 'Open Sans',
   },
   section: {
     marginBottom: 20,
@@ -502,6 +552,8 @@ const minimalStyles: StyleDefinitions = StyleSheet.create({
     fontSize: 16,
     marginBottom: 12,
     color: '#000',
+    fontFamily: 'Open Sans',
+    fontWeight: 700,
     borderBottom: 0.5,
     borderBottomColor: '#ccc',
     paddingBottom: 4,
@@ -604,18 +656,22 @@ export const ResumeDocument = ({ data, template = 'professional' }: { data: any,
       <Document>
         <Page size="A4" style={styles.page}>
           <View style={styles.leftColumn}>
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Skills</Text>
-              <View style={styles.skillsContainer}>
-                {data.skills.map((skill: string, index: number) => (
-                  <Text key={index} style={styles.skillList}>
-                    {skill}
-                  </Text>
-                ))}
+            {data.skills && data.skills.length > 0 && data.skills.some((skill: string) => skill.trim() !== '') && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Skills</Text>
+                <View style={styles.skillsContainer}>
+                  {data.skills.map((skill: string, index: number) => (
+                    skill.trim() !== '' && (
+                      <Text key={index} style={styles.skillList}>
+                        {skill}
+                      </Text>
+                    )
+                  ))}
+                </View>
               </View>
-            </View>
+            )}
 
-            {data.languages && (
+            {data.languages && data.languages.length > 0 && data.languages.some((lang: { language: string; proficiency: string }) => lang.language.trim() !== '') && (
               <View style={styles.languageSection}>
                 <Text style={styles.sectionTitle}>Languages</Text>
                 {data.languages.map((lang: any, index: number) => (
@@ -645,38 +701,42 @@ export const ResumeDocument = ({ data, template = 'professional' }: { data: any,
               </View>
             </View>
 
-            <View style={styles.section}>
-              <Text style={styles.rightSectionTitle}>Work Experience</Text>
-              {data.experience.map((exp: any, index: number) => (
-                <View key={index} style={styles.experienceItem}>
-                  <Text style={styles.jobTitle}>{exp.title}</Text>
-                  <Text style={styles.jobSubTitle}>{exp.company}</Text>
-                  <View style={styles.jobDetails}>
-                    <Text style={styles.dateRange}>{exp.startDate} - {exp.endDate || 'Present'}</Text>
-                    <Text style={styles.jobLocation}>{exp.location}</Text>
+            {data.experience && data.experience.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.rightSectionTitle}>Work Experience</Text>
+                {data.experience.map((exp: any, index: number) => (
+                  <View key={index} style={styles.experienceItem}>
+                    <Text style={styles.jobTitle}>{exp.title}</Text>
+                    <Text style={styles.jobSubTitle}>{exp.company}</Text>
+                    <View style={styles.jobDetails}>
+                      <Text style={styles.dateRange}>{exp.startDate} - {exp.endDate || 'Present'}</Text>
+                      <Text style={styles.jobLocation}>{exp.location}</Text>
+                    </View>
+                    <View style={styles.achievementContainer}>
+                      {exp.description.split('\n').map((bullet: string, i: number) => (
+                        <View key={i}>{renderBulletPoint(bullet)}</View>
+                      ))}
+                    </View>
                   </View>
-                  <View style={styles.achievementContainer}>
-                    {exp.description.split('\n').map((bullet: string, i: number) => (
-                      <View key={i}>{renderBulletPoint(bullet)}</View>
-                    ))}
-                  </View>
-                </View>
-              ))}
-            </View>
+                ))}
+              </View>
+            )}
 
-            <View style={styles.section}>
-              <Text style={styles.rightSectionTitle}>Education</Text>
-              {data.education.map((edu: any, index: number) => (
-                <View key={index} style={styles.experienceItem}>
-                  <Text style={styles.jobTitle}>{edu.school}</Text>
-                  <Text style={styles.jobSubTitle}>{edu.degree}</Text>
-                  <View style={styles.jobDetails}>
-                    <Text style={styles.dateRange}>{edu.graduationDate}</Text>
-                    <Text style={styles.jobLocation}>{edu.location}</Text>
+            {data.education && data.education.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.rightSectionTitle}>Education</Text>
+                {data.education.map((edu: any, index: number) => (
+                  <View key={index} style={styles.experienceItem}>
+                    <Text style={styles.jobTitle}>{edu.school}</Text>
+                    <Text style={styles.jobSubTitle}>{edu.degree}</Text>
+                    <View style={styles.jobDetails}>
+                      <Text style={styles.dateRange}>{edu.graduationDate}</Text>
+                      <Text style={styles.jobLocation}>{edu.location}</Text>
+                    </View>
                   </View>
-                </View>
-              ))}
-            </View>
+                ))}
+              </View>
+            )}
           </View>
         </Page>
       </Document>
@@ -695,70 +755,82 @@ export const ResumeDocument = ({ data, template = 'professional' }: { data: any,
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Education</Text>
-          {data.education.map((edu: any, index: number) => (
-            <View key={index} style={styles.experienceItem}>
-              <View style={styles.school}>
-                <Text style={styles.jobTitle}>{edu.school}</Text>
-                <Text>{edu.graduationDate}</Text>
+        {data.education && data.education.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Education</Text>
+            {data.education.map((edu: any, index: number) => (
+              <View key={index} style={styles.experienceItem}>
+                <View style={styles.school}>
+                  <Text style={styles.jobTitle}>{edu.school}</Text>
+                  <Text>{edu.graduationDate}</Text>
+                </View>
+                <View style={styles.jobDetails}>
+                  <Text style={styles.degree}>{edu.degree}</Text>
+                  <Text style={styles.jobLocation}>{edu.location}</Text>
+                </View>
               </View>
-              <View style={styles.jobDetails}>
-                <Text style={styles.degree}>{edu.degree}</Text>
-                <Text style={styles.jobLocation}>{edu.location}</Text>
-              </View>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Experience</Text>
-          {data.experience.map((exp: any, index: number) => (
-            <View key={index} style={styles.experienceItem}>
-              <View style={styles.jobDetails}>
-                <Text style={styles.jobTitle}>{exp.company}</Text>
-                <Text>{exp.startDate} - {exp.endDate || 'Present'}</Text>
-              </View>
-              <View style={styles.jobDetails}>
-                <Text style={styles.jobTitle}>{exp.title}</Text>
-                <Text style={styles.jobLocation}>{exp.location}</Text>
-              </View>
-              {exp.description.split('\n').map((bullet: string, i: number) => (
-                <View key={i}>{renderBulletPoint(bullet)}</View>
-              ))}
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Technical Skills</Text>
-          <View style={styles.skillsSection}>
-            {data.skills.map((skill: string, index: number) => (
-              <Text key={index} style={styles.skillList}>
-                {skill}
-              </Text>
             ))}
           </View>
-        </View>
+        )}
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Language Skills</Text>
-          {data.languages.map((lang: any, index: number) => (
-            <View key={index} style={styles.languageSection}>
-              <Text style={styles.languageItem}>{lang.language}</Text>
-              <Text style={styles.languageLevel}>{lang.proficiency}</Text>
-            </View>
-          ))}
-        </View>
+        {data.experience && data.experience.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Experience</Text>
+            {data.experience.map((exp: any, index: number) => (
+              <View key={index} style={styles.experienceItem}>
+                <View style={styles.jobDetails}>
+                  <Text style={styles.jobTitle}>{exp.company}</Text>
+                  <Text>{exp.startDate} - {exp.endDate || 'Present'}</Text>
+                </View>
+                <View style={styles.jobDetails}>
+                  <Text style={styles.jobTitle}>{exp.title}</Text>
+                  <Text style={styles.jobLocation}>{exp.location}</Text>
+                </View>
+                {exp.description.split('\n').map((bullet: string, i: number) => (
+                  <View key={i}>{renderBulletPoint(bullet)}</View>
+                ))}
+              </View>
+            ))}
+          </View>
+        )}
 
-        <View style={styles.section}>
-          {data.customSections.map((section: { title: string; description: string }, index: number) => (
-            <View key={index} style={styles.customSection}>
-              <Text style={styles.sectionTitle}>{section.title}</Text>
-              <Text style={styles.sectionDescription}>{section.description}</Text>
+        {data.skills && data.skills.length > 0 && data.skills.some((skill: string) => skill.trim() !== '') && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Technical Skills</Text>
+            <View style={styles.skillsSection}>
+              {data.skills.map((skill: string, index: number) => (
+                skill.trim() !== '' && (
+                  <Text key={index} style={styles.skillList}>
+                    {skill}
+                  </Text>
+                )
+              ))}
             </View>
-          ))}
-        </View>
+          </View>
+        )}
+
+        {data.languages && data.languages.length > 0 && data.languages.some((lang: { language: string; proficiency: string }) => lang.language.trim() !== '') && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Language Skills</Text>
+            {data.languages.map((lang: any, index: number) => (
+              <View key={index} style={styles.languageSection}>
+                <Text style={styles.languageItem}>{lang.language}</Text>
+                <Text style={styles.languageLevel}>{lang.proficiency}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {data.customSections && data.customSections.length > 0 && (
+          <View style={styles.section}>
+            {data.customSections.map((section: { title: string; description: string }, index: number) => (
+              <View key={index} style={styles.customSection}>
+                <Text style={styles.sectionTitle}>{section.title}</Text>
+                <Text style={styles.sectionDescription}>{section.description}</Text>
+              </View>
+            ))}
+          </View>
+        )}
       </Page>
     </Document>
   )

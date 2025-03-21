@@ -2,7 +2,6 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 
 const templates = [
   {
@@ -57,25 +56,17 @@ export default function Templates() {
       {/* Main Content */}
       <div className="py-12 px-6">
         <div className="max-w-7xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-10 text-center"
-          >
+          <div className="mb-10 text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Resume Templates</h1>
             <p className="text-lg text-white/90">
               Choose from our collection of professionally designed templates.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {templates.map((template, index) => (
-              <motion.div
+            {templates.map((template) => (
+              <div
                 key={template.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
                 className="group"
               >
                 <div className="relative bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 hover:bg-white/15 transition-all duration-300">
@@ -98,7 +89,7 @@ export default function Templates() {
                     Use Template
                   </Link>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

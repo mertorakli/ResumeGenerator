@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface DropdownOption {
   id: string | number;
@@ -61,10 +60,7 @@ const Dropdown = ({
             {value ? value.label : placeholder}
           </span>
         </span>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
+        <div>
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
             width="16" 
@@ -75,45 +71,40 @@ const Dropdown = ({
             strokeWidth="2" 
             strokeLinecap="round" 
             strokeLinejoin="round"
+            style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
           >
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
-        </motion.div>
+        </div>
       </button>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className={`fixed z-50 w-[calc(100%-2rem)] mt-1 bg-white border border-gray-200 rounded-lg shadow-lg ${menuClassName}`}
-            style={{
-              width: dropdownRef.current ? dropdownRef.current.offsetWidth : 'auto',
-              left: dropdownRef.current ? dropdownRef.current.getBoundingClientRect().left : 0,
-              top: dropdownRef.current ? dropdownRef.current.getBoundingClientRect().bottom + 5 : 0,
-            }}
-          >
-            <ul className="py-1 overflow-auto max-h-60">
-              {options.map((option) => (
-                <li key={option.id}>
-                  <button
-                    type="button"
-                    className={`flex items-center w-full px-4 py-2.5 text-sm hover:bg-gray-50 ${
-                      value?.id === option.id ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700'
-                    }`}
-                    onClick={() => handleSelect(option)}
-                  >
-                    {option.icon && <span className="mr-2">{option.icon}</span>}
-                    {option.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {isOpen && (
+        <div
+          className={`fixed z-50 w-[calc(100%-2rem)] mt-1 bg-white border border-gray-200 rounded-lg shadow-lg ${menuClassName}`}
+          style={{
+            width: dropdownRef.current ? dropdownRef.current.offsetWidth : 'auto',
+            left: dropdownRef.current ? dropdownRef.current.getBoundingClientRect().left : 0,
+            top: dropdownRef.current ? dropdownRef.current.getBoundingClientRect().bottom + 5 : 0,
+          }}
+        >
+          <ul className="py-1 overflow-auto max-h-60">
+            {options.map((option) => (
+              <li key={option.id}>
+                <button
+                  type="button"
+                  className={`flex items-center w-full px-4 py-2.5 text-sm hover:bg-gray-50 ${
+                    value?.id === option.id ? 'bg-indigo-50 text-indigo-600' : 'text-gray-700'
+                  }`}
+                  onClick={() => handleSelect(option)}
+                >
+                  {option.icon && <span className="mr-2">{option.icon}</span>}
+                  {option.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

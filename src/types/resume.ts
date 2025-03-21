@@ -15,22 +15,22 @@ export const resumeSchema = z.object({
     startDate: z.string().min(1, 'Start date is required'),
     endDate: z.string(),
     description: z.string().min(1, 'Job description is required'),
-  })),
+  })).optional().default([]).describe('Add work experience in chronological order'),
   education: z.array(z.object({
     degree: z.string().min(1, 'Degree is required'),
     school: z.string().min(1, 'School name is required'),
     location: z.string().min(1, 'Location is required'),
     graduationDate: z.string().min(1, 'Graduation date is required'),
-  })),
-  skills: z.array(z.string()).min(1, 'At least one skill is required'),
+  })).optional().default([]).describe('Add education details if you have formal education to include'),
+  skills: z.array(z.string()).optional().default([]).describe('Add skills to highlight your expertise'),
   languages: z.array(z.object({
     language: z.string().min(1, 'Language is required'),
     proficiency: z.string().min(1, 'Proficiency is required'),
-  })),
+  })).optional().default([]).describe('Add languages to showcase your linguistic abilities'),
   customSections: z.array(z.object({
     title: z.string().min(1, 'Section title is required'),
     description: z.string().min(1, 'Description is required'),
-  })),
+  })).optional().default([]).describe('Add custom sections to showcase additional achievements'),
 })
 
 export type ResumeData = z.infer<typeof resumeSchema>
@@ -45,9 +45,9 @@ export const defaultResumeData: ResumeData = {
     location: '',
     summary: '',
   },
-  experience: [{ title: '', company: '', location: '', startDate: '', endDate: '', description: '' }],
-  education: [{ degree: '', school: '', location: '', graduationDate: '' }],
-  skills: [''],
-  languages: [{ language: '', proficiency: '' }],
-  customSections: [{ title: '', description: '' }],
+  experience: [],
+  education: [],
+  skills: [],
+  languages: [],
+  customSections: [],
 } 

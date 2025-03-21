@@ -30,64 +30,80 @@ export default function CustomSections({ register, control, watch, setValue, err
         </p>
       </div>
 
-      <div className="space-y-6">
-        {fields.map((field, index) => (
-          <FormEntry key={field.id}>
-            <div className="space-y-6">
-              <div className="flex justify-between items-start">
-                <h3 className="text-lg font-medium text-white">Section {index + 1}</h3>
-                <Button
-                  type="button"
-                  onClick={() => remove(index)}
-                  variant="danger"
-                  size="sm"
-                  icon={<Trash2 className="w-4 h-4" />}
-                >
-                  Remove
-                </Button>
-              </div>
+      {fields.length === 0 ? (
+        <div className="flex justify-center py-6">
+          <Button
+            type="button"
+            onClick={() => append({ title: '', description: '' })}
+            variant="primary"
+            icon={<Plus className="w-4 h-4" />}
+            size="lg"
+          >
+            Add Your First Custom Section
+          </Button>
+        </div>
+      ) : (
+        <>
+          <div className="space-y-6">
+            {fields.map((field, index) => (
+              <FormEntry key={field.id}>
+                <div className="space-y-6">
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-lg font-medium text-white">Section {index + 1}</h3>
+                    <Button
+                      type="button"
+                      onClick={() => remove(index)}
+                      variant="danger"
+                      size="sm"
+                      icon={<Trash2 className="w-4 h-4" />}
+                    >
+                      Remove
+                    </Button>
+                  </div>
 
-              <Controller
-                control={control}
-                name={`customSections.${index}.title` as const}
-                render={({ field }) => (
-                  <FormInput
-                    label="Section Title"
-                    icon={Type}
-                    placeholder="e.g. Certifications, Projects, Publications"
-                    error={errors.customSections?.[index]?.title?.message}
-                    {...field}
+                  <Controller
+                    control={control}
+                    name={`customSections.${index}.title` as const}
+                    render={({ field }) => (
+                      <FormInput
+                        label="Section Title"
+                        icon={Type}
+                        placeholder="e.g. Certifications, Projects, Publications"
+                        error={errors.customSections?.[index]?.title?.message}
+                        {...field}
+                      />
+                    )}
                   />
-                )}
-              />
 
-              <Controller
-                control={control}
-                name={`customSections.${index}.description` as const}
-                render={({ field }) => (
-                  <FormTextarea
-                    label="Description"
-                    icon={FileText}
-                    rows={4}
-                    placeholder="Describe the details of this section..."
-                    error={errors.customSections?.[index]?.description?.message}
-                    {...field}
+                  <Controller
+                    control={control}
+                    name={`customSections.${index}.description` as const}
+                    render={({ field }) => (
+                      <FormTextarea
+                        label="Description"
+                        icon={FileText}
+                        rows={4}
+                        placeholder="Describe the details of this section..."
+                        error={errors.customSections?.[index]?.description?.message}
+                        {...field}
+                      />
+                    )}
                   />
-                )}
-              />
-            </div>
-          </FormEntry>
-        ))}
-      </div>
+                </div>
+              </FormEntry>
+            ))}
+          </div>
 
-      <Button
-        type="button"
-        onClick={() => append({ title: '', description: '' })}
-        variant="primary"
-        icon={<Plus className="w-4 h-4" />}
-      >
-        Add Custom Section
-      </Button>
+          <Button
+            type="button"
+            onClick={() => append({ title: '', description: '' })}
+            variant="primary"
+            icon={<Plus className="w-4 h-4" />}
+          >
+            Add Custom Section
+          </Button>
+        </>
+      )}
     </div>
   )
 } 

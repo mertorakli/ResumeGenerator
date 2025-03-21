@@ -5,31 +5,77 @@ import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer'
 import { ResumeDocument } from '@/utils/generatePDF'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { ResumeData, defaultResumeData } from '@/types/resume'
 
 function PreviewContent() {
   const searchParams = useSearchParams()
-  const resumeData = JSON.parse(searchParams.get('data') || '{}')
+  const resumeId = searchParams.get('id')
   const template = searchParams.get('template') || 'professional'
+  const [resumeData, setResumeData] = useState<ResumeData>(defaultResumeData)
   const [isMobile, setIsMobile] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    // Fetch resume data from API
+    const fetchResumeData = async () => {
+      console.log('Preview: Fetching resume data, ID:', resumeId);
+      try {
+        if (!resumeId) {
+          console.error('Preview: No resume ID provided');
+          throw new Error('Resume ID not provided')
+        }
+        
+        console.log('Preview: Making API request to:', `/api/resume?id=${resumeId}`);
+        const response = await fetch(`/api/resume?id=${resumeId}`)
+        console.log('Preview: API response status:', response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Preview: API error response:', errorText);
+          throw new Error('Failed to load resume data')
+        }
+        
+        const data = await response.json()
+        console.log('Preview: Resume data received:', data);
+        setResumeData(data)
+      } catch (err) {
+        console.error('Preview: Error loading resume:', err)
+        setError(err instanceof Error ? err.message : 'Unknown error occurred')
+      } finally {
+        // Set loading to false after a short delay to ensure PDF is generated
+        console.log('Preview: Setting loading to false after delay');
+        setTimeout(() => setIsLoading(false), 1500)
+      }
+    }
+    
     // Check if device is mobile
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
     }
     
+    fetchResumeData()
     checkMobile()
     window.addEventListener('resize', checkMobile)
     
-    // Set loading to false after a short delay to ensure PDF is generated
-    const timer = setTimeout(() => setIsLoading(false), 1500)
-    
     return () => {
       window.removeEventListener('resize', checkMobile)
-      clearTimeout(timer)
     }
-  }, [])
+  }, [resumeId])
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
+          <h2 className="text-red-600 text-lg font-medium mb-2">Error Loading Resume</h2>
+          <p className="text-gray-600">{error}</p>
+          <Link href="/create" className="mt-4 inline-block text-indigo-600 hover:text-indigo-800">
+            Return to Resume Editor
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   if (isLoading) {
     return (
@@ -84,9 +130,9 @@ function PreviewContent() {
                 {resumeData.personalInfo && (
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">
-                      {resumeData.personalInfo.firstName} {resumeData.personalInfo.lastName}
+                      {resumeData.personalInfo.fullName}
                     </h3>
-                    <p className="text-gray-600">{resumeData.personalInfo.title}</p>
+                    <p className="text-gray-600">{resumeData.personalInfo.email}</p>
                     {resumeData.personalInfo.summary && (
                       <p className="text-sm text-gray-600 mt-2 line-clamp-3">
                         {resumeData.personalInfo.summary}

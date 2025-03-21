@@ -76,7 +76,18 @@
 
 /* Smooth transitions */
 * {
-  transition: all 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out, 
+              color 0.3s ease-in-out, 
+              border-color 0.3s ease-in-out, 
+              opacity 0.3s ease-in-out,
+              transform 0.3s ease-in-out;
+}
+
+/* Explicit shadow transitions */
+.transition-shadow {
+  transition-property: box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
 }
 
 /* Custom scrollbar */

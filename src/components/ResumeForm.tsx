@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
 import { resumeSchema, ResumeData, defaultResumeData } from '@/types/resume'
 import { testResumeData } from '@/utils/testData'
 import PersonalInfoSection from './form-sections/PersonalInfoSection'
@@ -76,20 +75,50 @@ export default function ResumeForm() {
   }
 
   const handleFinalSubmit = async (data: ResumeData) => {
-    // Only called on the final step
-    const queryParams = new URLSearchParams()
-    queryParams.set('data', JSON.stringify(data))
-    const template = new URLSearchParams(window.location.search).get('template') || 'professional'
-    queryParams.set('template', template)
-    router.push(`/preview?${queryParams.toString()}`)
+    console.log('handleFinalSubmit called with data:', data);
+    try {
+      // Submit data to API instead of storing in URL
+      console.log('Sending API request to /api/resume');
+      const response = await fetch('/api/resume', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      console.log('API response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API error response:', errorText);
+        throw new Error('Failed to save resume');
+      }
+      
+      const result = await response.json();
+      console.log('API response data:', result);
+      const { id } = result;
+      
+      // Navigate with just the ID and template
+      const template = new URLSearchParams(window.location.search).get('template') || 'professional';
+      console.log('Navigating to:', `/preview?id=${id}&template=${template}`);
+      router.push(`/preview?id=${id}&template=${template}`);
+    } catch (error) {
+      console.error('Error saving resume:', error);
+      alert('Error saving resume: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      // Here you could add error handling UI
+    }
   }
 
   const onSubmit = (data: ResumeData) => {
+    console.log('Form submitted on step', currentStep, 'of', steps.length - 1);
     // This is now only used for the form's onSubmit handler
     if (currentStep === steps.length - 1) {
-      handleFinalSubmit(data)
+      console.log('On final step, calling handleFinalSubmit');
+      handleFinalSubmit(data);
     } else {
-      nextStep()
+      console.log('Not on final step, moving to next step');
+      nextStep();
     }
   }
 
@@ -105,6 +134,14 @@ export default function ResumeForm() {
 
   const goToStep = (index: number) => {
     setCurrentStep(index)
+  }
+
+  const getStepIndexById = (stepId: StepId): number => {
+    return steps.findIndex(step => step.id === stepId);
+  }
+
+  const navigateToSection = (sectionId: StepId) => {
+    goToStep(getStepIndexById(sectionId));
   }
 
   return (
@@ -235,63 +272,48 @@ export default function ResumeForm() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ x: 20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -20, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="space-y-6"
-            >
-              <div>
-                {React.createElement(stepComponents[steps[currentStep].id], {
-                  register,
-                  control,
-                  watch,
-                  setValue,
-                  errors
-                })}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          <div className="flex justify-between space-x-4">
-            <Button
-              type="button"
-              onClick={prevStep}
-              disabled={currentStep === 0}
-              fullWidth
-              variant="secondary"
-              icon={
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              }
-              iconPosition="left"
-            >
-              Previous
-            </Button>
-            <Button
-              type="button"
-              onClick={handleNext}
-              fullWidth
-              variant="primary"
-              icon={
-                currentStep === steps.length - 1 ? (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                ) : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                )
-              }
-              iconPosition="right"
-            >
-              {currentStep === steps.length - 1 ? 'Generate Resume' : 'Next'}
-            </Button>
+          <div className="space-y-6">
+            <div>
+              {React.createElement(stepComponents[steps[currentStep].id], {
+                register,
+                control,
+                errors,
+                watch,
+                setValue,
+                ...(steps[currentStep].id === 'review' ? { navigateToSection } : {})
+              })}
+            </div>
+            
+            <div className="flex justify-between pt-6">
+              <Button
+                type="button"
+                onClick={prevStep}
+                disabled={currentStep === 0}
+                variant="outline"
+                size="lg"
+              >
+                Previous
+              </Button>
+              
+              {currentStep === steps.length - 1 ? (
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                >
+                  Generate Resume
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  onClick={nextStep}
+                  variant="primary"
+                  size="lg"
+                >
+                  Next
+                </Button>
+              )}
+            </div>
           </div>
         </form>
       </div>

@@ -1,28 +1,20 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
 export default function Home() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768)
     }
 
     handleResize()
-    window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('resize', handleResize)
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('resize', handleResize)
     }
   }, [])
@@ -59,34 +51,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600">
-      {/* Animated background shapes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute w-[500px] h-[500px] rounded-full bg-blue-500/30 blur-3xl"
-          animate={{
-            x: mousePosition.x * 0.05,
-            y: mousePosition.y * 0.05,
-          }}
-          transition={{ type: 'spring', damping: 50 }}
-        />
-        <motion.div
-          className="absolute w-[500px] h-[500px] rounded-full bg-purple-500/30 blur-3xl"
-          animate={{
-            x: mousePosition.x * -0.05,
-            y: mousePosition.y * -0.05,
-          }}
-          transition={{ type: 'spring', damping: 50 }}
-        />
-      </div>
-
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-16 md:py-24">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
             Welcome to Resume Generator
           </h1>
@@ -95,37 +62,26 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/create">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-white text-purple-600 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
-              >
+              <button className="px-8 py-4 bg-white text-purple-600 rounded-full font-semibold text-lg shadow-[0_4px_14px_0_rgba(0,0,0,0.2)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)] transition-shadow duration-300">
                 Get Started
-              </motion.button>
+              </button>
             </Link>
             <Link href="/templates">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-white/10 text-white border-2 border-white/20 backdrop-blur-sm rounded-full font-semibold text-lg hover:bg-white/20 transition-all duration-300"
-              >
+              <button className="px-8 py-4 bg-white/10 text-white border-2 border-white/20 backdrop-blur-sm rounded-full font-semibold text-lg hover:bg-white/20 transition-all duration-300">
                 View Templates
-              </motion.button>
+              </button>
             </Link>
           </div>
-        </motion.div>
+        </div>
 
         {/* Features */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {features.map((feature, index) => (
-            <motion.div
+            <div
               key={feature.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
               className="relative group"
             >
-              <div className="absolute inset-0 bg-white/5 backdrop-blur-lg rounded-2xl transform group-hover:scale-105 transition-all duration-300" />
+              <div className="absolute inset-0 bg-white/5 backdrop-blur-lg rounded-2xl transform transition-all duration-300" />
               <div className="relative p-6 text-white">
                 <div className="mb-4 p-3 bg-white/10 rounded-xl inline-block">
                   {feature.icon}
@@ -133,32 +89,26 @@ export default function Home() {
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                 <p className="text-white/80">{feature.description}</p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* Design Principles */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-24 text-center"
-        >
+        <div className="mt-24 text-center">
           <div className="inline-block px-6 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm mb-8">
             Inspired by Dieter Rams' Principles of Good Design
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {['Innovative', 'Useful', 'Aesthetic', 'Understandable'].map((principle, index) => (
-              <motion.div
+              <div
                 key={principle}
-                whileHover={{ scale: 1.05 }}
                 className="px-4 py-3 rounded-lg bg-white/5 backdrop-blur-sm text-white/90"
               >
                 {principle}
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </main>
   )
