@@ -16,6 +16,12 @@ export const testResumeData: ResumeData = {
       startDate: '2021-03-01',
       endDate: '',
       description: 'Lead developer for the company\'s flagship product, managing a team of 5 engineers. Improved application performance by 40% through optimization and modernization of the tech stack. Implemented CI/CD pipeline reducing deployment time by 60%.',
+      bulletPoints: [
+        'Led a team of 5 engineers for the company\'s flagship product',
+        'Improved application performance by 40% through tech stack optimization',
+        'Implemented CI/CD pipeline reducing deployment time by 60%',
+        'Mentored junior developers and established coding standards'
+      ]
     },
     {
       title: 'Software Engineer',
@@ -24,6 +30,12 @@ export const testResumeData: ResumeData = {
       startDate: '2018-06-01',
       endDate: '2021-02-28',
       description: 'Developed and maintained multiple client-facing applications using React and TypeScript. Collaborated with UX team to implement responsive designs. Reduced bug reports by 30% through implementation of comprehensive testing strategy.',
+      bulletPoints: [
+        'Developed and maintained multiple client-facing applications using React and TypeScript',
+        'Collaborated with UX team to implement responsive designs',
+        'Reduced bug reports by 30% through implementation of comprehensive testing strategy',
+        'Participated in code reviews and contributed to technical documentation'
+      ]
     },
   ],
   education: [

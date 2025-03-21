@@ -15,6 +15,7 @@ export const resumeSchema = z.object({
     startDate: z.string().min(1, 'Start date is required'),
     endDate: z.string(),
     description: z.string().min(1, 'Job description is required'),
+    bulletPoints: z.array(z.string()).optional().default([]),
   })).optional().default([]).describe('Add work experience in chronological order'),
   education: z.array(z.object({
     degree: z.string().min(1, 'Degree is required'),
